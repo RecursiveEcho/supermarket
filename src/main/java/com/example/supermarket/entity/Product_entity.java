@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,4 +23,8 @@ public class Product_entity {
     private Double sellingPrice;//售价
     @Schema(title="库存",description="商品库存数量")
     private Integer stock;//库存数量
+    @Schema(title = "上架时间", description = "商品上架时间")
+    private LocalDateTime createTime;//上架时间
+    @Schema(title = "更新时间", description = "商品更新时间")
+    private LocalDateTime updateTime;//更新时间
 }
