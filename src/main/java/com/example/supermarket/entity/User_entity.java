@@ -21,4 +21,6 @@ public class User_entity {
     private LocalDateTime createTime;//创建时间
     @Schema(title ="更新时间",description="更新时间")
     private LocalDateTime dateTime;//更新时间
+    @Schema(title ="token",description="token")
+    private String token;//token
 }

@@ -32,4 +32,15 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setUpdateTime(LocalDateTime.now());
         productMapper.addProduct(productEntity);
     }
+
+    @Override
+    public void UpdateProduct(Product_entity productEntity) {
+        productEntity.setUpdateTime(LocalDateTime.now());
+        productMapper.UpdateProduct(productEntity);
+    }
+
+    @Override
+    public Product_entity findProductById(Long id) {
+        return productMapper.findProductById(id);
+    }
 }
