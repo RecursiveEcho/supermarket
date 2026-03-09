@@ -1,8 +1,8 @@
 package com.example.supermarket.controller;
 
-import com.example.supermarket.entity.LoginInfo;
-import com.example.supermarket.entity.Result;
-import com.example.supermarket.entity.User_entity;
+import com.example.supermarket.common.VO.LoginInfo;
+import com.example.supermarket.common.entity.Result;
+import com.example.supermarket.common.entity.UserEntity;
 import com.example.supermarket.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ public class UserController {
 
     @Operation(summary = "用户登陆",description = "用户登陆接口")
     @PostMapping("/login")
-    public Result login(@RequestBody User_entity  user){
+    public Result login(@RequestBody UserEntity user){
         log.info("用户登陆");
         LoginInfo info=userService.login(user);
         if(info!=null){

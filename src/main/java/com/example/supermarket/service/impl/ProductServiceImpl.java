@@ -1,9 +1,8 @@
 package com.example.supermarket.service.impl;
 
-import com.example.supermarket.entity.Product_entity;
+import com.example.supermarket.common.entity.ProductEntity;
 import com.example.supermarket.mapper.ProductMapper;
 import com.example.supermarket.service.ProductService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductMapper productMapper;
 
     @Override
-    public List<Product_entity> findAllProduct() {
+    public List<ProductEntity> findAllProduct() {
         return productMapper.findAllProduct();
     }
 
@@ -27,20 +26,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(Product_entity productEntity) {
+    public void addProduct(ProductEntity productEntity) {
         productEntity.setCreateTime(LocalDateTime.now());
         productEntity.setUpdateTime(LocalDateTime.now());
         productMapper.addProduct(productEntity);
     }
 
     @Override
-    public void UpdateProduct(Product_entity productEntity) {
+    public void UpdateProduct(ProductEntity productEntity) {
         productEntity.setUpdateTime(LocalDateTime.now());
         productMapper.UpdateProduct(productEntity);
     }
 
     @Override
-    public Product_entity findProductById(Long id) {
+    public ProductEntity findProductById(Long id) {
         return productMapper.findProductById(id);
     }
 }

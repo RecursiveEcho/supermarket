@@ -1,7 +1,15 @@
-package com.example.supermarket.entity;
+package com.example.supermarket.common.entity;
 
 import lombok.Data;
 
+/**
+ * 结果实体类
+ * <p>
+ * 结果实体类
+ *</p>
+ * @author chen.yang
+ * @date 2026-03-09 11:40:14
+ */
 @Data
 public class Result {
  private Integer code;//状态码,1为成功，0为失败

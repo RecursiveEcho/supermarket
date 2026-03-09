@@ -1,5 +1,6 @@
-package com.example.supermarket.entity;
+package com.example.supermarket.common.VO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,10 @@ import lombok.NoArgsConstructor;
  * 登陆信息
  */
 public class LoginInfo {
+    @Schema(title = "id")
     private Long id;
+    @Schema(title = "用户名")
     private String username;
+    @Schema(title = "token")
     private String token;
 }

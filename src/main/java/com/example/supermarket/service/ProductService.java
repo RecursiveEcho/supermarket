@@ -1,8 +1,7 @@
 package com.example.supermarket.service;
 
 
-import com.example.supermarket.entity.Product_entity;
-import com.example.supermarket.entity.Result;
+import com.example.supermarket.common.entity.ProductEntity;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface ProductService {
      * 查询所有商品
      * @return
      */
-    List<Product_entity> findAllProduct();
+    List<ProductEntity> findAllProduct();
 
     /**
      * 删除商品
@@ -23,17 +22,17 @@ public interface ProductService {
      * 添加商品
      * @param productEntity
      */
-    void addProduct(Product_entity productEntity);
+    void addProduct(ProductEntity productEntity);
 
     /**
      * 修改商品
      */
-    void UpdateProduct(Product_entity productEntity);
+    void UpdateProduct(ProductEntity productEntity);
 
     /**
      * 根据id查询商品
      * @param id
      * @return
      */
-    Product_entity findProductById(Long id);
+    ProductEntity findProductById(Long id);
 }
