@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(title = "商品信息 DTO", description = "商品数据传输对象")
 public class ProductDto {
+    @Schema(title = "id")
+    private Long id;
     @Schema(title = "名称")
     private String name;
     @Schema(title = "成本价")

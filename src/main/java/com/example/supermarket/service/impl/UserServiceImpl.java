@@ -1,24 +1,40 @@
 package com.example.supermarket.service.impl;
 
 import Utils.JwtUtils;
+import com.example.supermarket.common.DTO.UserDto;
 import com.example.supermarket.common.VO.LoginInfo;
+import com.example.supermarket.common.entity.Result;
 import com.example.supermarket.common.entity.UserEntity;
 import com.example.supermarket.mapper.UserMapper;
 import com.example.supermarket.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * 用户服务实现类
+ */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    /**
+     * 登陆
+     * @param user
+     * @return
+     */
     @Override
-    public LoginInfo login(UserEntity user) {
+    public Result login(UserDto user) {
+        log.info("用户登陆,用户名:{}",user.getUserName());
         UserEntity u = userMapper.login(user);
         if (u != null) {
             String token = JwtUtils.generateJwt(u.getId(), u.getUserName());
-            return new LoginInfo(u.getId(),u.getUserName(),token);
-        }else return null;
+            LoginInfo loginInfo = new LoginInfo(u.getId(),u.getUserName(),token);
+            return Result.success(loginInfo);
+        }else return Result.error("用户名或密码错误");
     }
 }

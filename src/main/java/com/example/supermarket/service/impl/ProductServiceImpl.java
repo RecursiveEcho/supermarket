@@ -1,45 +1,99 @@
 package com.example.supermarket.service.impl;
 
+import com.example.supermarket.common.DTO.ProductDto;
+import com.example.supermarket.common.VO.ProductVo;
 import com.example.supermarket.common.entity.ProductEntity;
 import com.example.supermarket.mapper.ProductMapper;
 import com.example.supermarket.service.ProductService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * 商品服务实现类
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductMapper productMapper;
 
+    /**
+     * 查询所有商品
+     * @return
+     */
     @Override
-    public List<ProductEntity> findAllProduct() {
-        return productMapper.findAllProduct();
+    public List<ProductVo> findAllProduct() {
+        List<ProductEntity> productList = productMapper.findAllProduct();
+        return productList.stream()
+            .map(this::convertToVo)
+            .collect(Collectors.toList());
     }
 
+    /**
+     * 删除商品
+     * @param id
+     */
     @Override
     public void deleteProduct(Long id) {
         productMapper.deleteProduct(id);
     }
 
+
+    /**
+     * 添加商品
+     * @param productDto
+     */
     @Override
-    public void addProduct(ProductEntity productEntity) {
+    public void addProduct(ProductDto productDto) {
+        ProductEntity productEntity = new ProductEntity();
+        BeanUtils.copyProperties(productDto, productEntity);
         productEntity.setCreateTime(LocalDateTime.now());
         productEntity.setUpdateTime(LocalDateTime.now());
         productMapper.addProduct(productEntity);
     }
 
+
+    /**
+     * 修改商品信息
+     * @param productDto
+     */
     @Override
-    public void UpdateProduct(ProductEntity productEntity) {
+    public void UpdateProduct(ProductDto productDto) {
+        ProductEntity productEntity = new ProductEntity();
+        BeanUtils.copyProperties(productDto, productEntity);
         productEntity.setUpdateTime(LocalDateTime.now());
         productMapper.UpdateProduct(productEntity);
     }
 
+
+    /**
+     * 根据id查询商品
+     * @param id
+     * @return
+     */
     @Override
-    public ProductEntity findProductById(Long id) {
-        return productMapper.findProductById(id);
+    public ProductVo findProductById(Long id) {
+        ProductEntity product = productMapper.findProductById(id);
+        if (product != null) {
+            return convertToVo(product);
+        }
+        return null;
+    }
+
+
+    /**
+     * 将实体类转换为VO
+     * @param entity
+     * @return
+     */
+    private ProductVo convertToVo(ProductEntity entity) {
+        ProductVo vo = new ProductVo();
+        BeanUtils.copyProperties(entity, vo);
+        return vo;
     }
 }

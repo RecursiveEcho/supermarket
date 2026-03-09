@@ -1,5 +1,7 @@
 package com.example.supermarket.controller;
 
+import com.example.supermarket.common.DTO.ProductDto;
+import com.example.supermarket.common.VO.ProductVo;
 import com.example.supermarket.common.entity.ProductEntity;
 import com.example.supermarket.common.entity.Result;
 import com.example.supermarket.service.ProductService;
@@ -26,7 +28,7 @@ public class ProductController {
     @GetMapping("/getProduct")
     public Result findAllProduct() {
         log("查询所有商品");
-        List<ProductEntity> productList=productService.findAllProduct();
+        List<ProductVo> productList=productService.findAllProduct();
         log("查询所有商品成功");
         return Result.success(productList);
     }
@@ -34,39 +36,55 @@ public class ProductController {
     @Operation(summary="查询商品",description="根据id查询商品")
     @GetMapping("/getProduct/{id}")
     public Result findProductById(@PathVariable Long id) {
-        log("根据id查询商品");
-        ProductEntity product=productService.findProductById(id);
-        if(product!=null){
-            log("根据id查询商品成功");
-            return Result.success(product);
-        }else{
-            log("根据id查询商品失败");
-            return Result.error("商品不存在");
+        try {
+            log("根据id查询商品");
+            ProductVo product=productService.findProductById(id);
+            if(product!=null){
+                log("根据id查询商品成功");
+                return Result.success(product);
+            }else{
+                log("根据id查询商品失败");
+                return Result.error("商品不存在");
+            }
+        } catch (Exception e) {
+            return Result.error("根据id查询商品失败"+e.getMessage());
         }
     }
 
     @Operation(summary="添加商品",description="添加商品")
     @PostMapping("/addProduct")
-    public Result addProduct(@RequestBody ProductEntity product_entity){
-        log("添加商品");
-        productService.addProduct(product_entity);
-        log("添加商品成功");
-        return Result.success();
+    public Result addProduct(@RequestBody ProductDto product){
+        try {
+            log("添加商品");
+            productService.addProduct(product);
+            log("添加商品成功");
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("添加商品失败"+e.getMessage());
+        }
     }
     @Operation(summary="删除商品",description="删除商品")
     @DeleteMapping("/deleteProduct/{id}")
     public Result deleteProduct(@PathVariable Long id){
-        log("删除商品");
-        productService.deleteProduct(id);
-        log("删除商品成功");
-        return Result.success();
+        try {
+            log("删除商品");
+            productService.deleteProduct(id);
+            log("删除商品成功");
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("删除商品失败"+e.getMessage());
+        }
     }
     @Operation(summary="修改商品",description="修改商品信息")
     @PutMapping("/updateProduct")
-    public Result updateProduct(@RequestBody ProductEntity product_entity){
-        log("修改商品");
-        productService.UpdateProduct(product_entity);
-        log("修改商品成功");
-        return Result.success();
+    public Result updateProduct(@RequestBody ProductDto product){
+        try {
+            log("修改商品");
+            productService.UpdateProduct(product);
+            log("修改商品成功");
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("修改商品失败"+e.getMessage());
+        }
     }
 }

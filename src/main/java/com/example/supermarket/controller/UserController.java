@@ -1,5 +1,6 @@
 package com.example.supermarket.controller;
 
+import com.example.supermarket.common.DTO.UserDto;
 import com.example.supermarket.common.VO.LoginInfo;
 import com.example.supermarket.common.entity.Result;
 import com.example.supermarket.common.entity.UserEntity;
@@ -20,14 +21,12 @@ public class UserController {
 
     @Operation(summary = "用户登陆",description = "用户登陆接口")
     @PostMapping("/login")
-    public Result login(@RequestBody UserEntity user){
-        log.info("用户登陆");
-        LoginInfo info=userService.login(user);
-        if(info!=null){
-            log.info("用户登陆成功");
-            return Result.success(info);
-        }else {
-            return Result.error("用户名或密码错误");
+    public Result login(@RequestBody UserDto userDto){
+        try {
+            log.info("用户登陆");
+            return userService.login(userDto);
+        } catch (Exception e) {
+            return Result.error("用户登陆失败"+e.getMessage());
         }
     }
 }
