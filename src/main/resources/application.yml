@@ -15,4 +15,23 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath*:com.example.supermarket.mapper/*.xml
+
+# SpringDoc 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# Knife4j 配置
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+    group-name: 默认分组

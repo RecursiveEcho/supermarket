@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.supermarket.mapper.ProductMapper">
+
+    <!-- 查询所有商品 -->
+    <select id="findAllProduct" resultType="com.example.supermarket.common.entity.ProductEntity">
+        select id, name, cost_price, selling_price, stock,create_time,update_time from product order by create_time desc;
+    </select>
+
+    <!-- 根据 ID 查询 -->
+    <select id="findProductById" resultType="com.example.supermarket.common.entity.ProductEntity">
+        select id, name, cost_price, selling_price, stock,create_time,update_time from product where id=#{id};
+    </select>
+
+    <!-- 添加商品 -->
+    <insert id="addProduct">
+        insert into product(name,cost_price,selling_price,stock,create_time,update_time) values
+        (#{name},#{costPrice},#{sellingPrice},#{stock},#{createTime},#{updateTime});
+    </insert>
+
+    <!-- 更新商品 -->
+    <update id="UpdateProduct">
+        update product set name=#{name},cost_price=#{costPrice},selling_price=#{sellingPrice},stock=#{stock},update_time=#{updateTime} where id=#{id};
+    </update>
+
+    <!-- 删除商品 -->
+    <delete id="deleteProduct">
+        delete from product where id=#{id};
+    </delete>
+
+    <!-- 动态查询商品 -->
+    <select id="queryProduct" resultType="com.example.supermarket.common.entity.ProductEntity">
+        SELECT
+            id, name, cost_price, selling_price,
+            stock, create_time, update_time
+        FROM product
+        <where>
+            <!-- 按 ID 精确查询 -->
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+
+            <!-- 商品名称模糊查询 -->
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+
+            <!-- 成本价查询（忽略 0 值） -->
+            <if test="costPrice != null and costPrice &gt; 0">
+                AND cost_price = #{costPrice}
+            </if>
+
+            <!-- 售价查询（忽略 0 值） -->
+            <if test="sellingPrice != null and sellingPrice &gt; 0">
+                AND selling_price = #{sellingPrice}
+            </if>
+        <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+        <if test="updateTime != null">
+                AND update_time = #{updateTime}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 批量更新商品 -->
+    <update id="updateProducts">
+        <foreach collection="list" item="product" separator=";">
+            UPDATE product
+            <set>
+                <if test="product.name != null">
+                    name = #{product.name},
+                </if>
+                <if test="product.costPrice != null">
+                    cost_price = #{product.costPrice},
+                </if>
+                <if test="product.sellingPrice != null">
+                    selling_price = #{product.sellingPrice},
+                </if>
+                <if test="product.stock != null">
+                    stock = #{product.stock},
+                </if>
+                <if test="product.updateTime != null">
+                    update_time = #{product.updateTime},
+                </if>
+            </set>
+            WHERE id = #{product.id}
+        </foreach>
+    </update>
+
+    <!-- 批量删除商品 -->
+    <delete id="deleteProducts">
+        DELETE FROM product
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

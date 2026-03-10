@@ -2,6 +2,7 @@ package com.example.supermarket.service;
 
 
 import com.example.supermarket.common.DTO.ProductDto;
+import com.example.supermarket.common.DTO.ProductQueryDto;
 import com.example.supermarket.common.VO.ProductVo;
 import com.example.supermarket.common.entity.ProductEntity;
 
@@ -37,4 +38,23 @@ public interface ProductService {
      * @return
      */
     ProductVo findProductById(Long id);
+
+    /**
+     * 查询商品
+     * @param productQueryDto
+     * @return
+     */
+    List<ProductVo> queryProduct(ProductQueryDto productQueryDto);
+
+    /**
+     * 批量修改商品
+     * @param productList
+     */
+    void updateProducts(List<ProductDto> productList);
+
+    /**
+     * 批量删除商品
+     * @param idList
+     */
+    void deleteProducts(List<Long> idList);
 }

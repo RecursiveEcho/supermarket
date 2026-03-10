@@ -27,7 +27,7 @@ public class ProductVo {
     @Schema(description = "商品价格")
     private Double costPrice;
     @Schema(description = "商品售价")
-    private String sellingPrice;
+    private Double sellingPrice;
     @Schema(description = "商品库存数量")
     private Integer stock;
     @Schema(description = "商品上架时间")
