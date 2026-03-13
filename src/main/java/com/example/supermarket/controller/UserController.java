@@ -11,14 +11,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="用户登陆",description="用户登陆接口")
+@Slf4j
 @RestController
 @RequestMapping("/user")
-@Slf4j
+@Tag(name="用户登陆",description="用户登陆接口")
 public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 用户登陆
+     * @param userDto
+     * @return
+     */
     @Operation(summary = "用户登陆",description = "用户登陆接口")
     @PostMapping("/login")
     public Result login(@RequestBody UserDto userDto){
@@ -29,4 +34,5 @@ public class UserController {
             return Result.error("用户登陆失败"+e.getMessage());
         }
     }
+
 }

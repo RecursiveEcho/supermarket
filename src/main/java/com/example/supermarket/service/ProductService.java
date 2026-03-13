@@ -1,14 +1,21 @@
 package com.example.supermarket.service;
 
 
+import com.example.supermarket.common.DTO.PageDto;
 import com.example.supermarket.common.DTO.ProductDto;
 import com.example.supermarket.common.DTO.ProductQueryDto;
+import com.example.supermarket.common.VO.MemberVo;
 import com.example.supermarket.common.VO.ProductVo;
+import com.example.supermarket.common.entity.PageResult;
 import com.example.supermarket.common.entity.ProductEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
+
+    PageResult<ProductVo> findProductByPage(Integer pageNum, Integer pageSize);
+
     /**
      * 查询所有商品
      * @return
@@ -30,7 +37,7 @@ public interface ProductService {
     /**
      * 修改商品
      */
-    void UpdateProduct(ProductDto product);
+    void updateProduct(ProductDto product);
 
     /**
      * 根据 id 查询商品

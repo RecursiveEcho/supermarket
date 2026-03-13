@@ -1,11 +1,17 @@
 package com.example.supermarket.service.impl;
 
+import com.example.supermarket.common.DTO.PageDto;
 import com.example.supermarket.common.DTO.ProductDto;
 import com.example.supermarket.common.DTO.ProductQueryDto;
+import com.example.supermarket.common.VO.MemberVo;
 import com.example.supermarket.common.VO.ProductVo;
+import com.example.supermarket.common.entity.PageResult;
 import com.example.supermarket.common.entity.ProductEntity;
 import com.example.supermarket.mapper.ProductMapper;
 import com.example.supermarket.service.ProductService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +23,32 @@ import java.util.stream.Collectors;
 /**
  * 商品服务实现类
  */
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Override
+    public PageResult<ProductVo> findProductByPage(Integer pageNum, Integer pageSize) {
+            // 打印日志确认参数
+            log.info("分页查询 - pageNum: {}, pageSize: {}", pageNum, pageSize);
+
+            // 设置分页参数
+            PageHelper.startPage(pageNum, pageSize);
+            List<ProductVo> productList = productMapper.findAllProduct();
+
+            // 使用 PageInfo 包装查询结果
+            PageInfo<ProductVo> pageInfo = new PageInfo<>(productList);
+
+            // 打印日志确认分页信息
+            log.info("分页结果 - pageNum: {}, pageSize: {}, total: {}",
+                    pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal());
+
+            // 使用静态工厂方法构建分页结果
+            return PageResult.of(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal(), pageInfo.getList());
+    }
 
     /**
      * 查询所有商品
@@ -29,10 +56,8 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<ProductVo> findAllProduct() {
-        List<ProductEntity> productList = productMapper.findAllProduct();
-        return productList.stream()
-            .map(this::convertToVo)
-            .collect(Collectors.toList());
+        List<ProductVo> productList = productMapper.findAllProduct();
+        return productList;
     }
 
     /**
@@ -64,11 +89,11 @@ public class ProductServiceImpl implements ProductService {
      * @param productDto
      */
     @Override
-    public void UpdateProduct(ProductDto productDto) {
+    public void updateProduct(ProductDto productDto) {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(productDto, productEntity);
         productEntity.setUpdateTime(LocalDateTime.now());
-        productMapper.UpdateProduct(productEntity);
+        productMapper.updateProduct(productEntity);
     }
 
 
@@ -99,6 +124,10 @@ public class ProductServiceImpl implements ProductService {
             .collect(Collectors.toList());//转换为List
     }
 
+    /**
+     * 批量修改商品信息
+     * @param productList
+     */
     @Override
     public void updateProducts(List<ProductDto> productList) {
         List<ProductEntity> productEntityList = productList.stream()
@@ -107,10 +136,16 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateProducts(productEntityList);
     }
 
+    /**
+     * 批量删除商品
+     * @param idList
+     */
     @Override
     public void deleteProducts(List<Long> idList) {
         productMapper.deleteProducts(idList);
     }
+
+
 
 
     /**
@@ -125,6 +160,11 @@ public class ProductServiceImpl implements ProductService {
         return vo;
     }
 
+    /**
+     * 将DTO转换为实体类
+     * @param dto
+     * @return
+     */
     private ProductEntity convertToEntity(ProductDto dto) {
         ProductEntity entity = new ProductEntity();
         BeanUtils.copyProperties(dto, entity);

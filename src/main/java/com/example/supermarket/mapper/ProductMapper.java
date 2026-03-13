@@ -6,8 +6,14 @@ import com.example.supermarket.common.VO.ProductVo;
 import com.example.supermarket.common.entity.ProductEntity;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 商品类mapper接口
+ * @author chen.yang
+ * @date 2026-03-13 09:47:56
+ */
 @Mapper
 public interface ProductMapper {
 
@@ -15,7 +21,7 @@ public interface ProductMapper {
      * 查询所有商品
      * @return
      */
-     List<ProductEntity> findAllProduct();
+     List<ProductVo> findAllProduct();
 
     /**
      * 删除商品
@@ -35,7 +41,7 @@ public interface ProductMapper {
      * 修改商品信息
      * @param productEntity
      */
-    void UpdateProduct(ProductEntity productEntity);
+    void updateProduct(ProductEntity productEntity);
 
     /**
      * 根据id查询商品
@@ -62,4 +68,15 @@ public interface ProductMapper {
      * @param idList
      */
     void deleteProducts(List<Long> idList);
+
+    /**
+     * 分页查询商品
+     * @param name
+     * @param costPrice
+     * @param sellingPrice
+     * @param createTime
+     * @param updateTime
+     * @return
+     */
+    List<ProductEntity> list(String name, Double costPrice, Double sellingPrice, LocalDateTime createTime, LocalDateTime updateTime);
 }

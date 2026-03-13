@@ -2,19 +2,22 @@ package com.example.supermarket.controller;
 
 import com.example.supermarket.common.DTO.ProductDto;
 import com.example.supermarket.common.DTO.ProductQueryDto;
+import com.example.supermarket.common.VO.MemberVo;
 import com.example.supermarket.common.VO.ProductVo;
-import com.example.supermarket.common.entity.ProductEntity;
+import com.example.supermarket.common.entity.PageResult;
 import com.example.supermarket.common.entity.Result;
+import com.example.supermarket.mapper.ProductMapper;
 import com.example.supermarket.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.rmi.server.LogStream.log;
 @Slf4j
 @RestController
 @RequestMapping("/product")
@@ -24,6 +27,8 @@ import static java.rmi.server.LogStream.log;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductMapper productMapper;
 
     @Operation(summary="查询商品",description="查询所有商品")
     @GetMapping("/getProduct")
@@ -82,7 +87,7 @@ public class ProductController {
     public Result updateProduct(@RequestBody ProductDto product){
         try {
             log.info("修改商品");
-            productService.UpdateProduct(product);
+            productService.updateProduct(product);
             log.info("修改商品成功");
             return Result.success();
         } catch (Exception e) {
@@ -96,7 +101,6 @@ public class ProductController {
         try {
             log.info("动态查询商品");
             List<ProductVo> productList=productService.queryProduct(productQueryDto);
-            log.info("动态查询商品成功");
             return Result.success(productList);
         } catch (Exception e) {
             return Result.error("多条件查询商品失败"+e.getMessage());
@@ -125,6 +129,22 @@ public class ProductController {
                 return Result.success();
         }catch (Exception e){
             return Result.error("批量删除商品失败"+e.getMessage());
+        }
+    }
+
+
+    @Operation(summary = "分页查询",description = "分页查询商品，返回分页结果")
+    @GetMapping("/pageProduct")
+    public Result findMemberByPage(@RequestParam(defaultValue = "1") Integer pageNum,
+                                   @RequestParam(defaultValue = "10") Integer pageSize){
+        try {
+            log.info("分页查询商品");
+            PageResult<ProductVo> pageResult= productService.findProductByPage(pageNum, pageSize);
+            log.info("分页查询商品成功");
+            return Result.success(pageResult);
+        }catch (Exception e){
+            log.error("分页查询失败", e);
+            return Result.error("分页查询失败：" + e.getMessage());
         }
     }
 }

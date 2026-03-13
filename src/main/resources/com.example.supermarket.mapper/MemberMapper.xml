@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.supermarket.mapper.MemberMapper">
+    <update id="updateMember">
+        update member <set>
+        <if test="name != null">
+            name= #{name},
+        </if>
+        <if test="username != null">
+            username= #{username},
+        </if>
+        <if test="phone != null">
+            phone= #{phone},
+        </if>
+        <if test="gender != null">
+            gender= #{gender},
+        </if>
+        <if test="card != null">
+            card= #{card},
+        </if>
+        <if test="level != null">
+            level= #{level},
+        </if>
+        <if test="age != null">
+            age= #{age},
+        </if>
+        <if test="createTime != null">
+            create_time= #{createTime},
+        </if>
+        <if test="updateTime != null">
+            update_time= #{updateTime},
+        </if>
+        where id= #{id}
+    </set>
+    </update>
+    <update id="updateMembers">
+        <foreach collection="list" item="member" separator=";">
+            UPDATE member
+            <set>
+                <if test="member.name != null">
+                    name = #{member.name},
+                </if>
+                <if test="member.username != null">
+                    username = #{member.username},
+                </if>
+                <if test="member.age != null">
+                    age = #{member.age},
+                </if>
+                <if test="member.gender != null">
+                    gender = #{member.gender},
+                </if>
+                <if test="member.phone != null">
+                    phone = #{member.phone},
+                </if>
+                <if test="member.card != null">
+                    card = #{member.card},
+                </if>
+                <if test="member.level != null">
+                    level = #{member.level},
+                </if>
+                <if test="member.updateTime != null">
+                    update_time = #{member.updateTime},
+                </if>
+            </set>
+            WHERE id = #{member.id}
+        </foreach>
+    </update>
+    <delete id="deleteMember">
+        delete from member where id= #{id}
+    </delete>
+    <delete id="deleteMembers">
+        delete from member where id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="findAllMember" resultType="com.example.supermarket.common.VO.MemberVo">
+        select id, name,username, age, gender, phone, card, level, create_time, update_time from member order by create_time desc
+    </select>
+
+    <select id="findMemberById" resultType="com.example.supermarket.common.VO.MemberVo">
+        select id, name,username, age, gender, phone, card, level, create_time, update_time from member where id= #{id}
+    </select>
+    <select id="queryMember" resultType="com.example.supermarket.common.VO.MemberVo">
+    select id, name,username, age, gender, phone, card, level, create_time, update_time from member
+    <where>
+        <if test="id != null and id > 0">
+            AND id = #{id}
+        </if>
+        <if test="name != null and name!=''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="userName != null and userName !=''">
+            AND username LIKE CONCAT('%', #{userName}, '%')
+        </if>
+    <if test="phone != null and phone !=''">
+        AND phone LIKE CONCAT('%', #{phone}, '%')
+    </if>
+    <if test="age!=null and age != 0">
+    AND age = #{age}
+    </if>
+    <if test="gender != null and gender !=''">
+    AND gender = #{gender}
+    </if>
+    <if test="card != null and card !=''">
+        AND card LIKE CONCAT('%', #{card}, '%')
+    </if>
+    <if test="level != null and level !=''">
+        AND level = #{level}
+    </if>
+    <if test="createTime != null">
+    AND create_time = #{createTime}
+    </if>
+    <if test="updateTime != null">
+    AND update_time = #{updateTime}
+    </if>
+    </where>
+    ORDER BY create_time DESC
+    </select>
+
+    <insert id="addMember">
+        insert into member(name,username, age, gender, phone, card, level, create_time, update_time) values(#{name},#{username}, #{age}, #{gender}, #{phone}, #{card}, #{level}, #{createTime}, #{updateTime})
+    </insert>
+</mapper>

@@ -17,6 +17,12 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:com.example.supermarket.mapper/*.xml
 
+# PageHelper 配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
 # SpringDoc 配置
 springdoc:
   api-docs:

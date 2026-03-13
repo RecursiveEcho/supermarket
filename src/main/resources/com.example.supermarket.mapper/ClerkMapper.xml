@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.supermarket.mapper.ClerkMapper">
+
+    <!-- 添加员工 -->
+    <insert id="addClerk">
+        insert into clerk(user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time)
+        values(#{userName},#{name},#{avatar},#{gender},#{phone},#{position},#{salary},#{entryDate},#{createTime},#{updateTime})
+    </insert>
+
+    <!-- 修改员工信息 -->
+    <update id="updateClerk">
+        update clerk
+        <set>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="position != null">
+                position = #{position},
+            </if>
+            <if test="salary != null">
+                salary = #{salary},
+            </if>
+            <if test="entryDate != null">
+                entry_date = #{entryDate},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 批量修改员工信息 -->
+    <update id="updateClerks">
+        <foreach collection="list" item="clerk" separator=";">
+            UPDATE clerk
+            <set>
+                <if test="clerk.userName != null">
+                    user_name = #{clerk.userName},
+                </if>
+                <if test="clerk.name != null">
+                    name = #{clerk.name},
+                </if>
+                <if test="clerk.avatar != null">
+                    avatar = #{clerk.avatar},
+                </if>
+                <if test="clerk.gender != null">
+                    gender = #{clerk.gender},
+                </if>
+                <if test="clerk.phone != null">
+                    phone = #{clerk.phone},
+                </if>
+                <if test="clerk.position != null">
+                    position = #{clerk.position},
+                </if>
+                <if test="clerk.salary != null">
+                    salary = #{clerk.salary},
+                </if>
+                <if test="clerk.entryDate != null">
+                    entry_date = #{clerk.entryDate},
+                </if>
+                <if test="clerk.updateTime != null">
+                    update_time = #{clerk.updateTime},
+                </if>
+            </set>
+            WHERE id = #{clerk.id}
+        </foreach>
+    </update>
+
+    <!-- 删除员工 -->
+    <delete id="deleteClerk">
+        delete from clerk where id=#{id}
+    </delete>
+
+    <!-- 批量删除员工 -->
+    <delete id="deleteClerks">
+        delete from clerk where id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询所有员工 -->
+    <select id="findAllClerk" resultType="com.example.supermarket.common.VO.ClerkVo">
+        select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time from clerk
+        order by create_time desc
+    </select>
+
+    <!-- 根据 ID 查询员工 -->
+    <select id="findClerkById" resultType="com.example.supermarket.common.VO.ClerkVo">
+        select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time
+        from clerk where id=#{id}
+    </select>
+
+    <!-- 动态查询员工 -->
+    <select id="queryClerk" resultType="com.example.supermarket.common.VO.ClerkVo">
+        select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time from clerk
+        <where>
+            <if test="id != null and id > 0">
+                AND id = #{id}
+            </if>
+            <if test="userName != null and userName !=''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="name != null and name !=''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="phone != null and phone !=''">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="position != null and position !=''">
+                AND position LIKE CONCAT('%', #{position}, '%')
+            </if>
+            <if test="gender != null and gender !=''">
+                AND gender = #{gender}
+            </if>
+            <if test="salary != null and salary != 0">
+                AND salary = #{salary}
+            </if>
+            <if test="entryDate != null">
+                AND entry_date = #{entryDate}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

@@ -6,28 +6,28 @@
 
     <!-- 查询所有商品 -->
     <select id="findAllProduct" resultType="com.example.supermarket.common.entity.ProductEntity">
-        select id, name, cost_price, selling_price, stock,create_time,update_time from product order by create_time desc;
+        select id, name, cost_price, selling_price, stock,create_time,update_time from product order by create_time desc
     </select>
 
     <!-- 根据 ID 查询 -->
     <select id="findProductById" resultType="com.example.supermarket.common.entity.ProductEntity">
-        select id, name, cost_price, selling_price, stock,create_time,update_time from product where id=#{id};
+        select id, name, cost_price, selling_price, stock,create_time,update_time from product where id=#{id}
     </select>
 
     <!-- 添加商品 -->
     <insert id="addProduct">
         insert into product(name,cost_price,selling_price,stock,create_time,update_time) values
-        (#{name},#{costPrice},#{sellingPrice},#{stock},#{createTime},#{updateTime});
+        (#{name},#{costPrice},#{sellingPrice},#{stock},#{createTime},#{updateTime})
     </insert>
 
     <!-- 更新商品 -->
-    <update id="UpdateProduct">
-        update product set name=#{name},cost_price=#{costPrice},selling_price=#{sellingPrice},stock=#{stock},update_time=#{updateTime} where id=#{id};
+    <update id="updateProduct">
+        update product set name=#{name},cost_price=#{costPrice},selling_price=#{sellingPrice},stock=#{stock},update_time=#{updateTime} where id=#{id}
     </update>
 
     <!-- 删除商品 -->
     <delete id="deleteProduct">
-        delete from product where id=#{id};
+        delete from product where id=#{id}
     </delete>
 
     <!-- 动态查询商品 -->
@@ -38,7 +38,7 @@
         FROM product
         <where>
             <!-- 按 ID 精确查询 -->
-            <if test="id != null">
+            <if test="id != null and id !=0">
                 AND id = #{id}
             </if>
 
@@ -56,11 +56,25 @@
             <if test="sellingPrice != null and sellingPrice &gt; 0">
                 AND selling_price = #{sellingPrice}
             </if>
-        <if test="createTime != null">
-                AND create_time = #{createTime}
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="list" resultType="com.example.supermarket.common.entity.ProductEntity">
+        SELECT
+            id, name, cost_price, selling_price,
+            stock, create_time, update_time
+        FROM product
+        <where>
+            <!-- 商品名称模糊查询 -->
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
             </if>
-        <if test="updateTime != null">
-                AND update_time = #{updateTime}
+            <if test="costPrice != null and costPrice &gt; 0">
+                AND cost_price = #{costPrice}
+            </if>
+
+            <if test="sellingPrice != null and sellingPrice &gt; 0">
+                AND selling_price = #{sellingPrice}
             </if>
         </where>
         ORDER BY create_time DESC
