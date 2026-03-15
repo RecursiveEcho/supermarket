@@ -64,6 +64,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProduct(Long id) {
+        // 先检查商品是否存在
+        ProductEntity product = productMapper.findProductById(id);
+        if (product == null) {
+            throw new IllegalArgumentException("删除失败：商品不存在，ID: " + id);
+        }
         productMapper.deleteProduct(id);
     }
 
@@ -88,6 +93,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void updateProduct(ProductDto productDto) {
+        // 先检查商品是否存在
+        ProductEntity product = productMapper.findProductById(productDto.getId());
+        if (product == null) {
+            throw new IllegalArgumentException("更新失败：商品不存在，ID: " + productDto.getId());
+        }
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(productDto, productEntity);
         productEntity.setUpdateTime(LocalDateTime.now());
@@ -106,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
         if (product != null) {
             return convertToVo(product);
         }
-        return null;
+        throw new IllegalArgumentException("查询失败：商品不存在，ID: " + id);
     }
 
     /**
@@ -140,6 +150,13 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProducts(List<Long> idList) {
+        // 检查是否有不存在的商品
+        for (Long id : idList) {
+            ProductEntity product = productMapper.findProductById(id);
+            if (product == null) {
+                throw new IllegalArgumentException("删除失败：商品不存在，ID: " + id);
+            }
+        }
         productMapper.deleteProducts(idList);
     }
 

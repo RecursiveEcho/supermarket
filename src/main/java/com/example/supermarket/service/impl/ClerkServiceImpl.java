@@ -43,7 +43,11 @@ public class ClerkServiceImpl implements ClerkService {
      */
     @Override
     public ClerkVo findClerkById(Long id) {
-        return clerkMapper.findClerkById(id);
+        ClerkVo clerk = clerkMapper.findClerkById(id);
+        if (clerk != null) {
+            return clerk;
+        }
+        throw new IllegalArgumentException("查询失败：员工不存在，ID: " + id);
     }
 
     /**
@@ -61,6 +65,11 @@ public class ClerkServiceImpl implements ClerkService {
      */
     @Override
     public void updateClerk(ClerkVo clerk) {
+        // 先检查员工是否存在
+        ClerkVo existingClerk = clerkMapper.findClerkById(clerk.getId());
+        if (existingClerk == null) {
+            throw new IllegalArgumentException("更新失败：员工不存在，ID: " + clerk.getId());
+        }
         clerkMapper.updateClerk(clerk);
     }
 
@@ -70,6 +79,11 @@ public class ClerkServiceImpl implements ClerkService {
      */
     @Override
     public void deleteClerk(Long id) {
+        // 先检查员工是否存在
+        ClerkVo clerk = clerkMapper.findClerkById(id);
+        if (clerk == null) {
+            throw new IllegalArgumentException("删除失败：员工不存在，ID: " + id);
+        }
         clerkMapper.deleteClerk(id);
     }
 
@@ -106,6 +120,13 @@ public class ClerkServiceImpl implements ClerkService {
 
     @Override
     public void deleteClerks(List<Long> idList) {
+        // 检查是否有不存在的员工
+        for (Long id : idList) {
+            ClerkVo clerk = clerkMapper.findClerkById(id);
+            if (clerk == null) {
+                throw new IllegalArgumentException("删除失败：员工不存在，ID: " + id);
+            }
+        }
         clerkMapper.deleteClerks(idList);
     }
 }

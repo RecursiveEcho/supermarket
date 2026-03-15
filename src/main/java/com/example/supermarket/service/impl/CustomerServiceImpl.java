@@ -37,7 +37,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerVo findCustomerById(Long id) {
-        return customerMapper.findCustomerById(id);
+        CustomerVo customer = customerMapper.findCustomerById(id);
+        if (customer != null) {
+            return customer;
+        }
+        throw new IllegalArgumentException("查询失败：客户不存在，ID: " + id);
     }
 
     @Override
@@ -47,11 +51,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(CustomerVo customer) {
+        // 先检查客户是否存在
+        CustomerVo existingCustomer = customerMapper.findCustomerById(customer.getId());
+        if (existingCustomer == null) {
+            throw new IllegalArgumentException("更新失败：客户不存在，ID: " + customer.getId());
+        }
         customerMapper.updateCustomer(customer);
     }
 
     @Override
     public void deleteCustomer(Long id) {
+        // 先检查客户是否存在
+        CustomerVo customer = customerMapper.findCustomerById(id);
+        if (customer == null) {
+            throw new IllegalArgumentException("删除失败：客户不存在，ID: " + id);
+        }
         customerMapper.deleteCustomer(id);
     }
 
@@ -77,6 +91,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomers(List<Long> idList) {
+        for (Long id : idList){
+            CustomerVo customer = customerMapper.findCustomerById(id);
+            if (customer == null) {
+                throw new IllegalArgumentException("删除失败：客户不存在，ID: " + id);
+            }
+        }
         customerMapper.deleteCustomers(idList);
     }
 }

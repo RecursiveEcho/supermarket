@@ -43,7 +43,11 @@ public class MemberServiceImpl implements MemberService {
     @Operation(summary = "根据id查询会员",description = "根据id查询会员")
     @Override
     public MemberVo findMemberById(Long id) {
-        return memberMapper.findMemberById(id);
+        MemberVo member = memberMapper.findMemberById(id);
+        if (member != null) {
+            return member;
+        }
+        throw new IllegalArgumentException("查询失败：会员不存在，ID: " + id);
     }
 
     @Operation(summary = "添加会员",description = "添加会员")
@@ -63,6 +67,11 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void updateMember(MemberVo member) {
+        // 先检查会员是否存在
+        MemberVo existingMember = memberMapper.findMemberById(member.getId());
+        if (existingMember == null) {
+            throw new IllegalArgumentException("更新失败：会员不存在，ID: " + member.getId());
+        }
         memberMapper.updateMember(member);
     }
 
@@ -73,6 +82,11 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void deleteMember(Long id) {
+        // 先检查会员是否存在
+        MemberVo member = memberMapper.findMemberById(id);
+        if (member == null) {
+            throw new IllegalArgumentException("删除失败：会员不存在，ID: " + id);
+        }
         memberMapper.deleteMember(id);
     }
 
@@ -114,13 +128,20 @@ public class MemberServiceImpl implements MemberService {
         return memberMapper.queryMember(memberDto);
     }
 
-    @Operation(summary = "批量修改会员信息",description = "批量修改会员信息")
     /**
      * 修改会员信息
      * @param memberList
      */
+    @Operation(summary = "批量修改会员信息",description = "批量修改会员信息")
     @Override
     public void updateMembers(List<MemberVo> memberList) {
+        // 检查会员是否存在
+        for (MemberVo member : memberList) {
+            MemberVo existingMember = memberMapper.findMemberById(member.getId());
+            if (existingMember == null) {
+                throw new IllegalArgumentException("修改失败：会员不存在，ID: " + member.getId());
+            }
+        }
         memberMapper.updateMembers(memberList);
     }
 
@@ -131,6 +152,13 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void deleteMembers(List<Long> idList) {
+        // 检查会员是否存在
+        for (Long id : idList) {
+            MemberVo member = memberMapper.findMemberById(id);
+            if (member == null) {
+                throw new IllegalArgumentException("删除失败：会员不存在，ID: " + id);
+            }
+        }
         memberMapper.deleteMembers(idList);
     }
 }
