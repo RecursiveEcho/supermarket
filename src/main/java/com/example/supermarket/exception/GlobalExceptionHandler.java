@@ -1,3 +1,4 @@
+// 优化后的完整代码
 package com.example.supermarket.exception;
 
 import com.example.supermarket.pojo.entity.Result;
@@ -7,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,14 +37,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result handleNullPointerException(NullPointerException e) {
         log.error("空指针异常：{}", e.getMessage());
-        return Result.error("空指针错误：" + e.getMessage() + "，请检查哪个对象为 null");
+        return Result.error("空指针错误：" + e.getMessage() + "，请检查数据");
     }
 
     @ExceptionHandler(IndexOutOfBoundsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result handleIndexOutOfBoundsException(IndexOutOfBoundsException e) {
         log.error("数组越界异常：{}", e.getMessage());
-        return Result.error("索引越界：" + e.getMessage() + "，访问的索引位置不存在");
+        return Result.error("索引越界：" + e.getMessage() + "，请检查输入范围");
     }
 
     @ExceptionHandler(ClassCastException.class)
@@ -114,6 +117,28 @@ public class GlobalExceptionHandler {
     public Result handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("数据未找到：{}", e.getMessage());
         return Result.error("数据不存在：" + e.getMessage() + "，原因：查询的 ID 在数据库中找不到");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        log.error("JSON解析异常：{}", e.getMessage());
+        String message = e.getMessage();
+        
+        // 处理日期时间格式错误
+        if (message.contains("LocalDateTime") || message.contains("LocalDate") || message.contains("LocalTime")) {
+            return Result.error("日期格式错误：请使用正确的日期格式，如 2025-12-01 12:34:56");
+        }
+        
+        // 处理其他JSON解析错误
+        return Result.error("请求参数格式错误：请检查输入数据格式");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("参数验证异常：{}", e.getMessage());
+        return Result.error("参数验证失败：" + e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
