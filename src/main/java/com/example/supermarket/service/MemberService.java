@@ -1,9 +1,8 @@
 package com.example.supermarket.service;
 
-import com.example.supermarket.common.DTO.MemberDto;
-import com.example.supermarket.common.DTO.PageDto;
-import com.example.supermarket.common.VO.MemberVo;
-import com.example.supermarket.common.entity.PageResult;
+import com.example.supermarket.pojo.DTO.MemberDto;
+import com.example.supermarket.pojo.VO.MemberVo;
+import com.example.supermarket.pojo.entity.PageResult;
 
 import java.util.List;
 

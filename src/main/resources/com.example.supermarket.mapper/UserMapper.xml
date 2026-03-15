@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.supermarket.mapper.UserMapper">
-    <select id="login" resultType="com.example.supermarket.common.DTO.UserDto">
+    <select id="login" resultType="com.example.supermarket.pojo.DTO.UserDto">
         select id, user_name, pass_word, create_time, update_time,token from user where user_name=#{userName} and pass_word=#{passWord}
     </select>
 </mapper>

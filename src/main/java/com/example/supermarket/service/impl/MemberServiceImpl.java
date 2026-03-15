@@ -1,15 +1,13 @@
 package com.example.supermarket.service.impl;
 
-import com.example.supermarket.common.DTO.MemberDto;
-import com.example.supermarket.common.DTO.PageDto;
-import com.example.supermarket.common.VO.MemberVo;
-import com.example.supermarket.common.entity.PageResult;
+import com.example.supermarket.pojo.DTO.MemberDto;
+import com.example.supermarket.pojo.VO.MemberVo;
+import com.example.supermarket.pojo.entity.PageResult;
 import com.example.supermarket.mapper.MemberMapper;
 import com.example.supermarket.service.MemberService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

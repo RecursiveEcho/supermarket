@@ -5,12 +5,12 @@
 <mapper namespace="com.example.supermarket.mapper.ProductMapper">
 
     <!-- 查询所有商品 -->
-    <select id="findAllProduct" resultType="com.example.supermarket.common.entity.ProductEntity">
+    <select id="findAllProduct" resultType="com.example.supermarket.pojo.entity.ProductEntity">
         select id, name, cost_price, selling_price, stock,create_time,update_time from product order by create_time desc
     </select>
 
     <!-- 根据 ID 查询 -->
-    <select id="findProductById" resultType="com.example.supermarket.common.entity.ProductEntity">
+    <select id="findProductById" resultType="com.example.supermarket.pojo.entity.ProductEntity">
         select id, name, cost_price, selling_price, stock,create_time,update_time from product where id=#{id}
     </select>
 
@@ -31,7 +31,7 @@
     </delete>
 
     <!-- 动态查询商品 -->
-    <select id="queryProduct" resultType="com.example.supermarket.common.entity.ProductEntity">
+    <select id="queryProduct" resultType="com.example.supermarket.pojo.entity.ProductEntity">
         SELECT
             id, name, cost_price, selling_price,
             stock, create_time, update_time
@@ -59,7 +59,7 @@
         </where>
         ORDER BY create_time DESC
     </select>
-    <select id="list" resultType="com.example.supermarket.common.entity.ProductEntity">
+    <select id="list" resultType="com.example.supermarket.pojo.entity.ProductEntity">
         SELECT
             id, name, cost_price, selling_price,
             stock, create_time, update_time

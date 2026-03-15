@@ -1,7 +1,7 @@
 package com.example.supermarket.service.impl;
 
-import com.example.supermarket.common.VO.ClerkVo;
-import com.example.supermarket.common.entity.PageResult;
+import com.example.supermarket.pojo.VO.ClerkVo;
+import com.example.supermarket.pojo.entity.PageResult;
 import com.example.supermarket.mapper.ClerkMapper;
 import com.example.supermarket.service.ClerkService;
 import com.github.pagehelper.PageHelper;

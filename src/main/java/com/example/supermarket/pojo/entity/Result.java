@@ -1,4 +1,4 @@
-package com.example.supermarket.common.entity;
+package com.example.supermarket.pojo.entity;
 
 import lombok.Data;
 

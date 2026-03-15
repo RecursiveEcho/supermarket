@@ -1,7 +1,7 @@
 package com.example.supermarket.service;
 
-import com.example.supermarket.common.VO.ClerkVo;
-import com.example.supermarket.common.entity.PageResult;
+import com.example.supermarket.pojo.VO.ClerkVo;
+import com.example.supermarket.pojo.entity.PageResult;
 
 import java.util.List;
 

@@ -1,9 +1,8 @@
 package com.example.supermarket.mapper;
 
-import com.example.supermarket.common.DTO.ProductDto;
-import com.example.supermarket.common.DTO.ProductQueryDto;
-import com.example.supermarket.common.VO.ProductVo;
-import com.example.supermarket.common.entity.ProductEntity;
+import com.example.supermarket.pojo.DTO.ProductQueryDto;
+import com.example.supermarket.pojo.VO.ProductVo;
+import com.example.supermarket.pojo.entity.ProductEntity;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;

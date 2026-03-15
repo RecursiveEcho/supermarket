@@ -1,7 +1,7 @@
 package com.example.supermarket.mapper;
 
-import com.example.supermarket.common.DTO.MemberDto;
-import com.example.supermarket.common.VO.MemberVo;
+import com.example.supermarket.pojo.DTO.MemberDto;
+import com.example.supermarket.pojo.VO.MemberVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

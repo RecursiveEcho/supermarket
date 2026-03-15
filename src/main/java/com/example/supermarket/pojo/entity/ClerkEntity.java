@@ -1,22 +1,32 @@
-package com.example.supermarket.common.VO;
+package com.example.supermarket.pojo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+/**
+ * 实现功能【】
+ * <p>
+ *
+ * </p>
+ *
+ * @author chen.yang
+ * @date 2026-03-13 18:53:39
+ */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "员工输出 VO")
-public class ClerkVo {
+@NoArgsConstructor
+@Schema(description = "员工实体类")
+public class ClerkEntity {
     @Schema(description = "员工 id")
     private Long id;
-    @Schema(description = "员工用户名")
-    private String userName;
     @Schema(description = "员工姓名")
     private String name;
+    @Schema(description = "员工用户名")
+    private String userName;
     @Schema(description = "员工头像")
     private String avatar;
     @Schema(description = "员工性别")

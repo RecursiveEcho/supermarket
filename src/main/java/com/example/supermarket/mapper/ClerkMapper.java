@@ -1,7 +1,6 @@
 package com.example.supermarket.mapper;
 
-import com.example.supermarket.common.VO.ClerkVo;
-import lombok.extern.slf4j.Slf4j;
+import com.example.supermarket.pojo.VO.ClerkVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

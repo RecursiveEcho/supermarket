@@ -1,4 +1,4 @@
-package com.example.supermarket.common.entity;
+package com.example.supermarket.pojo.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

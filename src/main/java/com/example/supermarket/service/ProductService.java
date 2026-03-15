@@ -1,21 +1,16 @@
 package com.example.supermarket.service;
 
 
-import com.example.supermarket.common.DTO.PageDto;
-import com.example.supermarket.common.DTO.ProductDto;
-import com.example.supermarket.common.DTO.ProductQueryDto;
-import com.example.supermarket.common.VO.MemberVo;
-import com.example.supermarket.common.VO.ProductVo;
-import com.example.supermarket.common.entity.PageResult;
-import com.example.supermarket.common.entity.ProductEntity;
+import com.example.supermarket.pojo.DTO.ProductDto;
+import com.example.supermarket.pojo.DTO.ProductQueryDto;
+import com.example.supermarket.pojo.VO.ProductVo;
+import com.example.supermarket.pojo.entity.PageResult;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
 
     PageResult<ProductVo> findProductByPage(Integer pageNum, Integer pageSize);
-
     /**
      * 查询所有商品
      * @return

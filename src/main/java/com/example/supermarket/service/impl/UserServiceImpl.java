@@ -1,16 +1,15 @@
 package com.example.supermarket.service.impl;
 
 import Utils.JwtUtils;
-import com.example.supermarket.common.DTO.UserDto;
-import com.example.supermarket.common.VO.LoginInfo;
-import com.example.supermarket.common.entity.Result;
-import com.example.supermarket.common.entity.UserEntity;
+import com.example.supermarket.pojo.DTO.UserDto;
+import com.example.supermarket.pojo.VO.LoginInfo;
+import com.example.supermarket.pojo.entity.Result;
+import com.example.supermarket.pojo.entity.UserEntity;
 import com.example.supermarket.mapper.UserMapper;
 import com.example.supermarket.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 用户服务实现类

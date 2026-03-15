@@ -1,7 +1,6 @@
-package com.example.supermarket.common.DTO;
+package com.example.supermarket.pojo.DTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

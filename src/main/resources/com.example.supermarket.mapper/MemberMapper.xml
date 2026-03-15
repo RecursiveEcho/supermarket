@@ -76,14 +76,14 @@
             #{item}
         </foreach>
     </delete>
-    <select id="findAllMember" resultType="com.example.supermarket.common.VO.MemberVo">
+    <select id="findAllMember" resultType="com.example.supermarket.pojo.VO.MemberVo">
         select id, name,username, age, gender, phone, card, level, create_time, update_time from member order by create_time desc
     </select>
 
-    <select id="findMemberById" resultType="com.example.supermarket.common.VO.MemberVo">
+    <select id="findMemberById" resultType="com.example.supermarket.pojo.VO.MemberVo">
         select id, name,username, age, gender, phone, card, level, create_time, update_time from member where id= #{id}
     </select>
-    <select id="queryMember" resultType="com.example.supermarket.common.VO.MemberVo">
+    <select id="queryMember" resultType="com.example.supermarket.pojo.VO.MemberVo">
     select id, name,username, age, gender, phone, card, level, create_time, update_time from member
     <where>
         <if test="id != null and id > 0">

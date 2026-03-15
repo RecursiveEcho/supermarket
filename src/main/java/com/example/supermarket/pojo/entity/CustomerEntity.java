@@ -1,4 +1,4 @@
-package com.example.supermarket.common.VO;
+package com.example.supermarket.pojo.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -14,30 +14,40 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author chen.yang
- * @date 2026-03-13 09:42:56
+ * @date 2026-03-15 10:15:06
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberVo {
-    @Schema(description = "会员id")
+@Schema(description = "客户")
+public class CustomerEntity {
+    @Schema(description = "客户 id")
     private Long id;
-    @Schema(description = "会员用户名")
+
+    @Schema(description = "用户名")
     private String userName;
-    @Schema(description = "会员姓名")
+
+    @Schema(description = "客户姓名")
     private String name;
-    @Schema(description = "会员年龄")
+
+    @Schema(description = "年龄")
     private Integer age;
-    @Schema(description = "会员手机号")
-    private String phone;
-    @Schema(description = "会员性别")
+
+    @Schema(description = "性别")
     private String gender;
-    @Schema(description = "会员卡号")
-    private String card;
-    @Schema(description = "会员等级")
-    private String level;
+
+    @Schema(description = "联系方式")
+    private String phone;
+
+    @Schema(description = "收货地址")
+    private String address;
+
+    @Schema(description = "密码")
+    private String password;
+
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
+
     @Schema(description = "修改时间")
     private LocalDateTime updateTime;
 }

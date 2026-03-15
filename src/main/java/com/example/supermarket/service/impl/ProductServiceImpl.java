@@ -1,12 +1,10 @@
 package com.example.supermarket.service.impl;
 
-import com.example.supermarket.common.DTO.PageDto;
-import com.example.supermarket.common.DTO.ProductDto;
-import com.example.supermarket.common.DTO.ProductQueryDto;
-import com.example.supermarket.common.VO.MemberVo;
-import com.example.supermarket.common.VO.ProductVo;
-import com.example.supermarket.common.entity.PageResult;
-import com.example.supermarket.common.entity.ProductEntity;
+import com.example.supermarket.pojo.DTO.ProductDto;
+import com.example.supermarket.pojo.DTO.ProductQueryDto;
+import com.example.supermarket.pojo.VO.ProductVo;
+import com.example.supermarket.pojo.entity.PageResult;
+import com.example.supermarket.pojo.entity.ProductEntity;
 import com.example.supermarket.mapper.ProductMapper;
 import com.example.supermarket.service.ProductService;
 import com.github.pagehelper.PageHelper;

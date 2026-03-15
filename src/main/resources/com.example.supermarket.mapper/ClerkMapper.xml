@@ -96,19 +96,19 @@
     </delete>
 
     <!-- 查询所有员工 -->
-    <select id="findAllClerk" resultType="com.example.supermarket.common.VO.ClerkVo">
+    <select id="findAllClerk" resultType="com.example.supermarket.pojo.VO.ClerkVo">
         select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time from clerk
         order by create_time desc
     </select>
 
     <!-- 根据 ID 查询员工 -->
-    <select id="findClerkById" resultType="com.example.supermarket.common.VO.ClerkVo">
+    <select id="findClerkById" resultType="com.example.supermarket.pojo.VO.ClerkVo">
         select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time
         from clerk where id=#{id}
     </select>
 
     <!-- 动态查询员工 -->
-    <select id="queryClerk" resultType="com.example.supermarket.common.VO.ClerkVo">
+    <select id="queryClerk" resultType="com.example.supermarket.pojo.VO.ClerkVo">
         select id,user_name,name,avatar,gender,phone,position,salary,entry_date,create_time,update_time from clerk
         <where>
             <if test="id != null and id > 0">

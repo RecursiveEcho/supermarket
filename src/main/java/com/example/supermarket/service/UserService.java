@@ -1,9 +1,7 @@
 package com.example.supermarket.service;
 
-import com.example.supermarket.common.DTO.UserDto;
-import com.example.supermarket.common.VO.LoginInfo;
-import com.example.supermarket.common.entity.Result;
-import com.example.supermarket.common.entity.UserEntity;
+import com.example.supermarket.pojo.DTO.UserDto;
+import com.example.supermarket.pojo.entity.Result;
 
 public interface UserService {
 
@@ -12,5 +10,6 @@ public interface UserService {
      * @param user
      * @return
      */
+
      Result login(UserDto user);
 }

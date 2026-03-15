@@ -1,4 +1,4 @@
-package com.example.supermarket.common.VO;
+package com.example.supermarket.pojo.VO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

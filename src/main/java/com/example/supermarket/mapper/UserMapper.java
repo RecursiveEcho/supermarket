@@ -1,9 +1,8 @@
 package com.example.supermarket.mapper;
 
-import com.example.supermarket.common.DTO.UserDto;
-import com.example.supermarket.common.entity.UserEntity;
+import com.example.supermarket.pojo.DTO.UserDto;
+import com.example.supermarket.pojo.entity.UserEntity;
 import  org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * 管理者登陆接口

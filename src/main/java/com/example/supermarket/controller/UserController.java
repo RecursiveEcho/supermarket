@@ -1,9 +1,7 @@
 package com.example.supermarket.controller;
 
-import com.example.supermarket.common.DTO.UserDto;
-import com.example.supermarket.common.VO.LoginInfo;
-import com.example.supermarket.common.entity.Result;
-import com.example.supermarket.common.entity.UserEntity;
+import com.example.supermarket.pojo.DTO.UserDto;
+import com.example.supermarket.pojo.entity.Result;
 import com.example.supermarket.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,20 +17,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /**
-     * 用户登陆
-     * @param userDto
-     * @return
-     */
     @Operation(summary = "用户登陆",description = "用户登陆接口")
     @PostMapping("/login")
     public Result login(@RequestBody UserDto userDto){
-        try {
-            log.info("用户登陆");
-            return userService.login(userDto);
-        } catch (Exception e) {
-            return Result.error("用户登陆失败"+e.getMessage());
-        }
+        return userService.login(userDto);
     }
 
 }

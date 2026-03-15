@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.supermarket.mapper.CustomerMapper">
+    <update id="updateCustomer">
+        update customer <set>
+        <if test="name != null">
+            name= #{name},
+        </if>
+        <if test="username != null">
+            username= #{username},
+        </if>
+        <if test="phone != null">
+            phone= #{phone},
+        </if>
+        <if test="gender != null">
+            gender= #{gender},
+        </if>
+        <if test="age != null">
+            age= #{age},
+        </if>
+        <if test="address != null">
+            address= #{address},
+        </if>
+        <if test="createTime != null">
+            create_time= #{createTime},
+        </if>
+        <if test="updateTime != null">
+            update_time= #{updateTime},
+        </if>
+        where id= #{id}
+    </set>
+    </update>
+
+    <update id="updateCustomers">
+        <foreach collection="list" item="customer" separator=";">
+            UPDATE customer
+            <set>
+                <if test="customer.name != null">
+                    name = #{customer.name},
+                </if>
+                <if test="customer.username != null">
+                    username = #{customer.username},
+                </if>
+                <if test="customer.age != null">
+                    age = #{customer.age},
+                </if>
+                <if test="customer.gender != null">
+                    gender = #{customer.gender},
+                </if>
+                <if test="customer.phone != null">
+                    phone = #{customer.phone},
+                </if>
+                <if test="customer.address != null">
+                    address = #{customer.address},
+                </if>
+                <if test="customer.updateTime != null">
+                    update_time = #{customer.updateTime},
+                </if>
+            </set>
+            WHERE id = #{customer.id}
+        </foreach>
+    </update>
+
+    <delete id="deleteCustomer">
+        delete from customer where id= #{id}
+    </delete>
+
+    <delete id="deleteCustomers">
+        delete from customer where id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="findAllCustomer" resultType="com.example.supermarket.pojo.VO.CustomerVo">
+        select id, name, username, age, gender, phone, address, create_time, update_time from customer order by create_time desc
+    </select>
+
+    <select id="findCustomerById" resultType="com.example.supermarket.pojo.VO.CustomerVo">
+        select id, name, username, age, gender, phone, address, create_time, update_time from customer where id= #{id}
+    </select>
+
+    <select id="queryCustomer" resultType="com.example.supermarket.pojo.VO.CustomerVo">
+    select id, name, username, age, gender, phone, address, create_time, update_time from customer
+    <where>
+        <if test="id != null and id > 0">
+            AND id = #{id}
+        </if>
+        <if test="name != null and name!=''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="userName != null and userName !=''">
+            AND username LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="phone != null and phone !=''">
+            AND phone LIKE CONCAT('%', #{phone}, '%')
+        </if>
+        <if test="age!=null and age != 0">
+        AND age = #{age}
+        </if>
+        <if test="gender != null and gender !=''">
+        AND gender = #{gender}
+        </if>
+        <if test="address != null and address !=''">
+            AND address LIKE CONCAT('%', #{address}, '%')
+        </if>
+        <if test="createTime != null">
+        AND create_time = #{createTime}
+        </if>
+        <if test="updateTime != null">
+        AND update_time = #{updateTime}
+        </if>
+    </where>
+    ORDER BY create_time DESC
+    </select>
+
+    <insert id="addCustomer">
+        insert into customer(name, username, age, gender, phone, address, create_time, update_time) values(#{name}, #{username}, #{age}, #{gender}, #{phone}, #{address}, #{createTime}, #{updateTime})
+    </insert>
+</mapper>
