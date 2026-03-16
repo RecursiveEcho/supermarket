@@ -12,7 +12,17 @@ import {
   Shop,
   DataBoard,
   Document,
-  Setting
+  Setting,
+  Wallet,
+  Box,
+  Van,
+  Ticket,
+  Present,
+  Plus,
+  Minus,
+  Warning,
+  Calendar,
+  RefreshLeft
 } from '@element-plus/icons-vue'
 </script>
 
@@ -23,108 +33,207 @@ import {
         邕城百货
       </el-header>
       <el-container>
-        <el-aside width="200px">
-          <el-menu router>
-              <!--首页-->
-              <el-menu-item index="/index">
-                <el-icon></el-icon>首页
-              </el-menu-item>
+        <el-aside width="220px">
+          <el-menu router :default-openeds="['product']">
+            <!-- 首页 -->
+            <el-menu-item index="/index">
+              <el-icon><Shop /></el-icon>
+              <span>首页</span>
+            </el-menu-item>
+
             <!-- 商品管理 -->
             <el-sub-menu index="product">
               <template #title>
-                <el-icon><ShoppingCart /></el-icon>商品管理
+                <el-icon><ShoppingCart /></el-icon>
+                <span>商品管理</span>
               </template>
               <el-menu-item index="/product/fruit">
-                <el-icon><Apple /></el-icon>果蔬
+                <el-icon><Apple /></el-icon>
+                <span>果蔬</span>
               </el-menu-item>
               <el-menu-item index="/product/snack">
-                <el-icon><Food /></el-icon>零食
+                <el-icon><Food /></el-icon>
+                <span>零食</span>
               </el-menu-item>
               <el-menu-item index="/product/drink">
-                <el-icon><GobletSquareFull /></el-icon>酒水
+                <el-icon><GobletSquareFull /></el-icon>
+                <span>酒水</span>
               </el-menu-item>
               <el-menu-item index="/product/fresh">
-                <el-icon><IceTea /></el-icon>生鲜
+                <el-icon><IceTea /></el-icon>
+                <span>生鲜</span>
               </el-menu-item>
               <el-menu-item index="/product/appliance">
-                <el-icon><Monitor /></el-icon>家电
+                <el-icon><Monitor /></el-icon>
+                <span>家电</span>
               </el-menu-item>
               <el-menu-item index="/product/other">
-                <el-icon><Folder /></el-icon>其他
+                <el-icon><Folder /></el-icon>
+                <span>其他</span>
               </el-menu-item>
             </el-sub-menu>
 
             <!-- 会员管理 -->
             <el-sub-menu index="member">
               <template #title>
-                <el-icon><User /></el-icon>会员管理
+                <el-icon><User /></el-icon>
+                <span>会员管理</span>
               </template>
               <el-menu-item index="/member/list">
-                <el-icon><User /></el-icon>会员列表
+                <el-icon><User /></el-icon>
+                <span>会员列表</span>
               </el-menu-item>
               <el-menu-item index="/member/level">
-                <el-icon><UserFilled /></el-icon>会员等级
+                <el-icon><UserFilled /></el-icon>
+                <span>会员等级</span>
               </el-menu-item>
               <el-menu-item index="/member/statistics">
-                <el-icon><DataBoard /></el-icon>会员统计
+                <el-icon><DataBoard /></el-icon>
+                <span>会员统计</span>
+              </el-menu-item>
+            </el-sub-menu>
+
+            <!-- 积分商城 -->
+            <el-sub-menu index="pointmall">
+              <template #title>
+                <el-icon><Present /></el-icon>
+                <span>积分商城</span>
+              </template>
+              <el-menu-item index="/pointmall/goods">
+                <el-icon><Present /></el-icon>
+                <span>积分商品</span>
+              </el-menu-item>
+              <el-menu-item index="/pointmall/order">
+                <el-icon><ShoppingCart /></el-icon>
+                <span>兑换订单</span>
+              </el-menu-item>
+              <el-menu-item index="/pointmall/rule">
+                <el-icon><Ticket /></el-icon>
+                <span>积分规则</span>
+              </el-menu-item>
+            </el-sub-menu>
+
+            <!-- 库存管理 -->
+            <el-sub-menu index="inventory">
+              <template #title>
+                <el-icon><Box /></el-icon>
+                <span>库存管理</span>
+              </template>
+              <el-menu-item index="/inventory/stock">
+                <el-icon><Box /></el-icon>
+                <span>库存查询</span>
+              </el-menu-item>
+              <el-menu-item index="/inventory/in">
+                <el-icon><Plus /></el-icon>
+                <span>入库管理</span>
+              </el-menu-item>
+              <el-menu-item index="/inventory/out">
+                <el-icon><Minus /></el-icon>
+                <span>出库管理</span>
+              </el-menu-item>
+              <el-menu-item index="/inventory/check">
+                <el-icon><Document /></el-icon>
+                <span>库存盘点</span>
+              </el-menu-item>
+              <el-menu-item index="/inventory/warning">
+                <el-icon><Warning /></el-icon>
+                <span>库存预警</span>
+              </el-menu-item>
+            </el-sub-menu>
+
+            <!-- 供应链管理 -->
+            <el-sub-menu index="supply">
+              <template #title>
+                <el-icon><Van /></el-icon>
+                <span>供应链管理</span>
+              </template>
+              <el-menu-item index="/supply/supplier">
+                <el-icon><User /></el-icon>
+                <span>供应商管理</span>
+              </el-menu-item>
+              <el-menu-item index="/supply/purchase">
+                <el-icon><Document /></el-icon>
+                <span>采购订单</span>
+              </el-menu-item>
+              <el-menu-item index="/supply/receive">
+                <el-icon><Box /></el-icon>
+                <span>采购入库</span>
+              </el-menu-item>
+              <el-menu-item index="/supply/return">
+                <el-icon><RefreshLeft /></el-icon>
+                <span>采购退货</span>
               </el-menu-item>
             </el-sub-menu>
 
             <!-- 员工管理 -->
             <el-sub-menu index="clerk">
               <template #title>
-                <el-icon><UserFilled /></el-icon>员工管理
+                <el-icon><UserFilled /></el-icon>
+                <span>员工管理</span>
               </template>
               <el-menu-item index="/clerk/info">
-                <el-icon><User /></el-icon>员工信息
+                <el-icon><User /></el-icon>
+                <span>员工信息</span>
               </el-menu-item>
               <el-menu-item index="/clerk/schedule">
-                <el-icon><UserFilled /></el-icon>员工排班
+                <el-icon><Calendar /></el-icon>
+                <span>员工排班</span>
               </el-menu-item>
               <el-menu-item index="/clerk/attendance">
-                <el-icon><Document /></el-icon>考勤记录
+                <el-icon><Document /></el-icon>
+                <span>考勤记录</span>
               </el-menu-item>
             </el-sub-menu>
 
             <!-- 客户管理 -->
             <el-sub-menu index="customer">
               <template #title>
-                <el-icon><User /></el-icon>客户管理
+                <el-icon><User /></el-icon>
+                <span>客户管理</span>
               </template>
               <el-menu-item index="/customer/list">
-                <el-icon><User /></el-icon>客户列表
+                <el-icon><User /></el-icon>
+                <span>客户列表</span>
               </el-menu-item>
               <el-menu-item index="/customer/permission">
-                <el-icon><Setting /></el-icon>权限设置
+                <el-icon><Setting /></el-icon>
+                <span>权限设置</span>
               </el-menu-item>
             </el-sub-menu>
 
             <!-- 店铺管理 -->
             <el-sub-menu index="shop">
               <template #title>
-                <el-icon><Shop /></el-icon>店铺管理
+                <el-icon><Shop /></el-icon>
+                <span>店铺管理</span>
               </template>
               <el-menu-item index="/shop/info">
-                <el-icon><Shop /></el-icon>店铺信息
+                <el-icon><Shop /></el-icon>
+                <span>店铺信息</span>
               </el-menu-item>
               <el-menu-item index="/shop/data">
-                <el-icon><DataBoard /></el-icon>经营数据
+                <el-icon><DataBoard /></el-icon>
+                <span>经营数据</span>
               </el-menu-item>
               <el-menu-item index="/shop/setting">
-                <el-icon><Setting /></el-icon>店铺设置
+                <el-icon><Setting /></el-icon>
+                <span>店铺设置</span>
               </el-menu-item>
             </el-sub-menu>
 
             <!-- 系统设置 -->
             <el-sub-menu index="system">
               <template #title>
-                <el-icon><Setting /></el-icon>系统设置
+                <el-icon><Setting /></el-icon>
+                <span>系统设置</span>
               </template>
               <el-menu-item index="/system/role">
-                <el-icon><User /></el-icon>角色管理
+                <el-icon><User /></el-icon>
+                <span>角色管理</span>
               </el-menu-item>
               <el-menu-item index="/system/config">
-                <el-icon><Setting /></el-icon>系统配置
+                <el-icon><Setting /></el-icon>
+                <span>系统配置</span>
               </el-menu-item>
             </el-sub-menu>
           </el-menu>
@@ -159,6 +268,7 @@ import {
   font-weight: bold;
   height: 60px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
 }
 
 .el-aside {
@@ -167,6 +277,19 @@ import {
   height: calc(100vh - 60px);
   border-right: 1px solid #dee2e6;
   overflow-y: auto;
+}
+
+.el-aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+.el-aside::-webkit-scrollbar-thumb {
+  background: #c5a028;
+  border-radius: 3px;
+}
+
+.el-aside::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
 .el-menu {
@@ -178,6 +301,7 @@ import {
   color: #34495e;
   font-weight: 500;
   transition: all 0.3s;
+  font-size: 14px;
 }
 
 .el-sub-menu__title:hover {
@@ -188,6 +312,7 @@ import {
 .el-menu-item {
   color: #5d6d7e;
   transition: all 0.3s;
+  font-size: 14px;
 }
 
 .el-menu-item:hover {
@@ -198,6 +323,18 @@ import {
 .el-menu-item.is-active {
   background-color: rgba(212, 175, 55, 0.2);
   color: #D4AF37;
+}
+
+.el-menu-item .el-icon {
+  margin-right: 8px;
+  width: 16px;
+  text-align: center;
+}
+
+.el-sub-menu__title .el-icon {
+  margin-right: 8px;
+  width: 16px;
+  text-align: center;
 }
 
 .el-main {
