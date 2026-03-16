@@ -1,3 +1,4 @@
+# ==================== 后端忽略项（保留你原有内容） ====================
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
@@ -31,3 +32,33 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# ==================== 新增：前端（Vue）忽略项 ====================
+# 前端依赖包（体积大，无需提交）
+frontend/node_modules/
+frontend/supermarketweb/node_modules/
+
+# 前端打包产物（发布时再生成，无需提交）
+frontend/dist/
+frontend/supermarketweb/dist/
+frontend/supermarketweb/build/
+
+# 前端环境配置文件（敏感/本地配置，无需提交）
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/supermarketweb/.env
+frontend/supermarketweb/.env.local
+frontend/supermarketweb/.env.development.local
+frontend/supermarketweb/.env.production.local
+
+# 前端缓存/日志文件
+frontend/supermarketweb/.pnpm-debug.log*
+frontend/supermarketweb/yarn-error.log*
+frontend/supermarketweb/npm-debug.log*
+frontend/supermarketweb/.cache/
+
+# 前端编辑器临时文件
+frontend/supermarketweb/*.sublime-*
+frontend/supermarketweb/.DS_Store  # Mac 系统隐藏文件
