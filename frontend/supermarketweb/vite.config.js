@@ -30,9 +30,9 @@ export default defineConfig({
     proxy: {
       // 示例：把 /api 开头的请求代理到后端接口
       '/api': {
-        target: 'http://localhost:3000', // 替换成你的后端地址
+        target: 'http://localhost:8081', // Spring Boot 默认端口
         changeOrigin: true, // 开启跨域
-        rewrite: (path) => path.replace(/^\/api/, '') // 去掉请求里的 /api 前缀
+        rewrite: (path) => path // 保留 /api 前缀
       }
     }
   },

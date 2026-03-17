@@ -7,8 +7,8 @@ const tableData = ref([])
 const loading = ref(false)
 
 const searchForm = reactive({
-  clerkCode: '',
-  clerkName: '',
+  username: '',
+  realName: '',
   storeId: '',
   status: ''
 })
@@ -22,19 +22,18 @@ const dialogVisible = ref(false)
 const dialogTitle = ref('新增员工')
 const formData = reactive({
   id: null,
-  clerkCode: '',
-  clerkName: '',
-  gender: 0,
+  username: '',
+  realName: '',
   phone: '',
+  email: '',
   storeId: null,
-  position: '',
   status: 1,
   remark: ''
 })
 
 const formRules = {
-  clerkCode: [{ required: true, message: '请输入员工编号', trigger: 'blur' }],
-  clerkName: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入员工账号', trigger: 'blur' }],
+  realName: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
@@ -47,12 +46,11 @@ const loadData = () => {
     tableData.value = [
       {
         id: 1,
-        clerkCode: 'EMP001',
-        clerkName: '张员工',
-        gender: 1,
+        username: 'EMP001',
+        realName: '张员工',
         phone: '13800138001',
+        email: 'zhang@example.com',
         storeName: '邕城百货总店',
-        position: '店员',
         status: 1,
         createTime: '2024-01-10'
       }
@@ -63,8 +61,8 @@ const loadData = () => {
 
 const handleSearch = () => loadData()
 const handleReset = () => {
-  searchForm.clerkCode = ''
-  searchForm.clerkName = ''
+  searchForm.username = ''
+  searchForm.realName = ''
   searchForm.storeId = ''
   searchForm.status = ''
   loadData()
@@ -72,7 +70,7 @@ const handleReset = () => {
 
 const handleAdd = () => {
   dialogTitle.value = '新增员工'
-  Object.assign(formData, { id: null, clerkCode: '', clerkName: '', gender: 0, phone: '', storeId: null, position: '', status: 1, remark: '' })
+  Object.assign(formData, { id: null, username: '', realName: '', phone: '', email: '', storeId: null, status: 1, remark: '' })
   dialogVisible.value = true
 }
 
@@ -83,7 +81,7 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  ElMessageBox.confirm(`确定要删除员工"${row.clerkName}"吗？`, '警告', {
+  ElMessageBox.confirm(`确定要删除员工"${row.realName}"吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -99,7 +97,6 @@ const handleSubmit = () => {
   loadData()
 }
 
-const genderMap = { 0: '女', 1: '男' }
 const statusTagMap = {
   1: { type: 'success', text: '在职' },
   0: { type: 'info', text: '离职' }
@@ -114,11 +111,11 @@ onMounted(() => {
   <div class="container">
     <el-card class="search-card" shadow="never">
       <el-form :inline="true" :model="searchForm" class="search-form">
-        <el-form-item label="员工编号">
-          <el-input v-model="searchForm.clerkCode" placeholder="请输入编号" clearable style="width: 120px" />
+        <el-form-item label="员工账号">
+          <el-input v-model="searchForm.username" placeholder="请输入账号" clearable style="width: 120px" />
         </el-form-item>
         <el-form-item label="员工姓名">
-          <el-input v-model="searchForm.clerkName" placeholder="请输入姓名" clearable style="width: 120px" />
+          <el-input v-model="searchForm.realName" placeholder="请输入姓名" clearable style="width: 120px" />
         </el-form-item>
         <el-form-item label="门店">
           <el-select v-model="searchForm.storeId" placeholder="请选择门店" clearable style="width: 150px">
@@ -142,14 +139,11 @@ onMounted(() => {
     <el-card class="table-card" shadow="never">
       <el-table v-loading="loading" :data="tableData" style="width: 100%" border stripe>
         <el-table-column type="index" label="序号" width="60" align="center" />
-        <el-table-column prop="clerkCode" label="员工编号" width="120" />
-        <el-table-column prop="clerkName" label="员工姓名" width="100" />
-        <el-table-column label="性别" width="60" align="center">
-          <template #default="{ row }">{{ genderMap[row.gender] }}</template>
-        </el-table-column>
+        <el-table-column prop="username" label="员工账号" width="120" />
+        <el-table-column prop="realName" label="员工姓名" width="100" />
         <el-table-column prop="phone" label="手机号" width="130" />
+        <el-table-column prop="email" label="邮箱" width="150" show-overflow-tooltip />
         <el-table-column prop="storeName" label="门店" width="150" />
-        <el-table-column prop="position" label="职位" width="100" />
         <el-table-column label="状态" width="80" align="center">
           <template #default="{ row }">
             <el-tag :type="statusTagMap[row.status].type">{{ statusTagMap[row.status].text }}</el-tag>
@@ -169,28 +163,25 @@ onMounted(() => {
       <el-form :model="formData" :rules="formRules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="员工编号" prop="clerkCode">
-              <el-input v-model="formData.clerkCode" placeholder="请输入员工编号" clearable />
+            <el-form-item label="员工账号" prop="username">
+              <el-input v-model="formData.username" placeholder="请输入员工账号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="员工姓名" prop="clerkName">
-              <el-input v-model="formData.clerkName" placeholder="请输入姓名" clearable />
+            <el-form-item label="员工姓名" prop="realName">
+              <el-input v-model="formData.realName" placeholder="请输入姓名" clearable />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="性别" prop="gender">
-              <el-radio-group v-model="formData.gender">
-                <el-radio :label="1">男</el-radio>
-                <el-radio :label="0">女</el-radio>
-              </el-radio-group>
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="formData.phone" placeholder="请输入手机号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号" prop="phone">
-              <el-input v-model="formData.phone" placeholder="请输入手机号" clearable />
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="formData.email" placeholder="请输入邮箱" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -202,13 +193,6 @@ onMounted(() => {
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="职位" prop="position">
-              <el-input v-model="formData.position" placeholder="请输入职位" clearable />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="formData.status">

@@ -1,31 +1,26 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import App from '@/App.vue'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(ElementPlus)
+// 注册 Element Plus 图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
+app.use(pinia)
 app.use(router)
-
-// 添加全局样式，清除默认边距
-const style = document.createElement('style')
-style.textContent = `
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-  }
-  #app {
-    width: 100%;
-    height: 100vh;
-  }
-`
-document.head.appendChild(style)
+app.use(ElementPlus, {
+  locale: zhCn,
+  size: 'default'
+})
 
 app.mount('#app')
