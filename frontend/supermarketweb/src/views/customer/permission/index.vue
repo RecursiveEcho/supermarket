@@ -1,7 +1,8 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Save } from '@element-plus/icons-vue'
+import { Check } from '@element-plus/icons-vue'
+import { queryCustomer } from '@/api/customer'
 
 const loading = ref(false)
 const searchKeyword = ref('')
@@ -28,42 +29,47 @@ const permissionOptions = [
   { key: 'reportView', label: '报表查看', desc: '查看统计报表' }
 ]
 
-const loadCustomers = () => {
+const filteredCustomers = computed(() => {
+  const kw = String(searchKeyword.value || '').trim()
+  if (!kw) return customerList.value
+  return customerList.value.filter(c => {
+    return String(c.userName || '').includes(kw) || String(c.name || '').includes(kw) || String(c.phone || '').includes(kw)
+  })
+})
+
+const loadCustomers = async () => {
   loading.value = true
-  setTimeout(() => {
-    customerList.value = [
-      { id: 1, customerCode: 'KH001', customerName: '南宁科技有限公司' },
-      { id: 2, customerCode: 'KH002', customerName: '广西贸易公司' }
-    ]
+  try {
+    const list = await queryCustomer({})
+    customerList.value = Array.isArray(list) ? list : []
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
 const handleRowChange = (row) => {
   if (row) {
     selectedCustomerId.value = row.id
-    selectedCustomerName.value = row.customerName
+    selectedCustomerName.value = row.name || row.userName || ''
     loadPermissions()
   }
 }
 
+const permissionStorageKey = (id) => `customer_permissions:${id}`
+
 const loadPermissions = () => {
   if (!selectedCustomerId.value) return
-  loading.value = true
-  setTimeout(() => {
-    permissions.productView = true
-    permissions.orderView = true
-    permissions.paymentView = true
-    loading.value = false
-  }, 500)
+  const raw = localStorage.getItem(permissionStorageKey(selectedCustomerId.value))
+  const obj = raw ? JSON.parse(raw) : {}
+  Object.keys(permissions).forEach(k => {
+    permissions[k] = Boolean(obj?.[k])
+  })
 }
 
 const handleSave = () => {
-  loading.value = true
-  setTimeout(() => {
-    ElMessage.success('权限保存成功')
-    loading.value = false
-  }, 500)
+  if (!selectedCustomerId.value) return
+  localStorage.setItem(permissionStorageKey(selectedCustomerId.value), JSON.stringify({ ...permissions }))
+  ElMessage.success('权限保存成功（本地保存）')
 }
 
 const handleSelectAll = (checked) => {
@@ -71,6 +77,10 @@ const handleSelectAll = (checked) => {
     permissions[key] = checked
   })
 }
+
+watch(searchKeyword, () => {
+  // 仅触发 computed 更新，不需要额外逻辑
+})
 
 loadCustomers()
 </script>
@@ -84,9 +94,9 @@ loadCustomers()
             <span>客户列表</span>
           </template>
           <el-input v-model="searchKeyword" placeholder="搜索客户" clearable style="margin-bottom: 16px" />
-          <el-table :data="customerList" style="width: 100%" border highlight-current-row @current-change="handleRowChange">
-            <el-table-column prop="customerCode" label="编码" width="80" />
-            <el-table-column prop="customerName" label="名称" show-overflow-tooltip />
+          <el-table :data="filteredCustomers" style="width: 100%" border highlight-current-row @current-change="handleRowChange">
+            <el-table-column prop="userName" label="用户名" width="110" show-overflow-tooltip />
+            <el-table-column prop="name" label="姓名" show-overflow-tooltip />
           </el-table>
         </el-card>
       </el-col>
@@ -95,7 +105,7 @@ loadCustomers()
           <template #header>
             <div class="card-header">
               <span>权限配置 - {{ selectedCustomerName || '请选择客户' }}</span>
-              <el-button type="primary" :icon="Save" @click="handleSave" :disabled="!selectedCustomerId" :loading="loading">保存配置</el-button>
+              <el-button type="primary" :icon="Check" @click="handleSave" :disabled="!selectedCustomerId" :loading="loading">保存配置</el-button>
             </div>
           </template>
           <div v-if="!selectedCustomerId" class="empty-tip">

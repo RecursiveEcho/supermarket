@@ -2,9 +2,13 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Plus, Edit, Delete } from '@element-plus/icons-vue'
+import { pageIn } from '@/api/inventory'
 
 const tableData = ref([])
 const loading = ref(false)
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 
 const searchForm = reactive({
   ioNo: '',
@@ -47,24 +51,19 @@ const formRules = {
   storeId: [{ required: true, message: '请选择门店', trigger: 'change' }]
 }
 
-const loadData = () => {
+const loadData = async () => {
   loading.value = true
-  setTimeout(() => {
-    tableData.value = [
-      {
-        id: 1,
-        ioNo: 'IN202401001',
-        storeName: '邕城百货总店',
-        bizType: 'PURCHASE_IN',
-        bizNo: 'PO202401001',
-        totalQuantity: 500,
-        totalAmount: 15000.00,
-        status: 'CONFIRMED',
-        createTime: '2024-01-15 10:30:00'
-      }
-    ]
+  try {
+    const res = await pageIn({
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
+      ...searchForm
+    })
+    tableData.value = res?.list || []
+    total.value = Number(res?.total || 0)
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
 const handleSearch = () => loadData()
@@ -132,6 +131,17 @@ const getBizTypeLabel = (value) => {
   const item = bizTypeOptions.find(opt => opt.value === value)
   return item ? item.label : value
 }
+
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  pageNum.value = 1
+  loadData()
+}
+
+const handleCurrentChange = (val) => {
+  pageNum.value = val
+  loadData()
+}
 </script>
 
 <template>
@@ -196,6 +206,17 @@ const getBizTypeLabel = (value) => {
           </template>
         </el-table-column>
       </el-table>
+      <div style="display:flex;justify-content:flex-end;padding-top:16px;">
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </el-card>
 
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="800px" :close-on-click-modal="false" @closed="resetForm">

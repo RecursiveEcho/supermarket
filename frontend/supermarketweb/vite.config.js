@@ -32,7 +32,7 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8081', // Spring Boot 默认端口
         changeOrigin: true, // 开启跨域
-        rewrite: (path) => path // 保留 /api 前缀
+        rewrite: (path) => path.replace(/^\/api/, '') // 去掉 /api 前缀，匹配后端 /member /product 等
       }
     }
   },

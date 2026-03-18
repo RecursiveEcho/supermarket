@@ -28,30 +28,29 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    // 如果返回的状态码不是 200，说明接口有错误
-    if (res.code !== 200) {
-      ElMessage.error(res.message || '请求失败')
-
-      // 401: 未授权或 token 过期
-      if (res.code === 401) {
-        ElMessageBox.confirm('登录状态已过期，请重新登录', '提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          localStorage.removeItem('token')
-          router.push('/login')
-        })
-      }
-
-      return Promise.reject(new Error(res.message || 'Error'))
+    // 后端统一返回：{ code: 1/0, msg, data }
+    if (res?.code !== 1) {
+      ElMessage.error(res?.msg || '请求失败')
+      return Promise.reject(new Error(res?.msg || 'Error'))
     }
 
     return res.data
   },
   error => {
     console.error('响应错误:', error)
-    ElMessage.error(error.message || '网络错误')
+    const status = error?.response?.status
+    if (status === 401) {
+      ElMessageBox.confirm('登录状态已过期，请重新登录', '提示', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('token')
+        router.push('/login')
+      })
+    } else {
+      ElMessage.error(error?.response?.data?.msg || error.message || '网络错误')
+    }
     return Promise.reject(error)
   }
 )

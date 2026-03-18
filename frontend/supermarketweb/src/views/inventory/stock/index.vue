@@ -1,10 +1,13 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
+import { pageStock } from '@/api/inventory'
 
 const tableData = ref([])
 const loading = ref(false)
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 
 const searchForm = reactive({
   productCode: '',
@@ -25,24 +28,19 @@ const storeOptions = ref([
   { id: 2, name: '邕城百货朝阳店' }
 ])
 
-const loadData = () => {
+const loadData = async () => {
   loading.value = true
-  setTimeout(() => {
-    tableData.value = [
-      {
-        id: 1,
-        productCode: 'FG001',
-        productName: '红富士苹果',
-        categoryName: '果蔬',
-        storeName: '邕城百货总店',
-        stockQuantity: 500,
-        warningStock: 100,
-        unit: 'kg',
-        lastUpdateTime: '2024-01-20 10:30:00'
-      }
-    ]
+  try {
+    const res = await pageStock({
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
+      ...searchForm
+    })
+    tableData.value = res?.list || []
+    total.value = Number(res?.total || 0)
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
 const handleSearch = () => loadData()
@@ -51,6 +49,17 @@ const handleReset = () => {
   searchForm.productName = ''
   searchForm.categoryId = ''
   searchForm.storeId = ''
+  loadData()
+}
+
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  pageNum.value = 1
+  loadData()
+}
+
+const handleCurrentChange = (val) => {
+  pageNum.value = val
   loadData()
 }
 
@@ -102,6 +111,18 @@ onMounted(() => {
         <el-table-column prop="unit" label="单位" width="80" />
         <el-table-column prop="lastUpdateTime" label="最后更新时间" width="160" />
       </el-table>
+
+      <div class="pagination">
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </el-card>
   </div>
 </template>
@@ -113,4 +134,5 @@ onMounted(() => {
 .search-form :deep(.el-form-item) { margin-right: 16px; }
 .table-card { min-height: 500px; }
 .text-warning { color: #E6A23C; font-weight: 600; }
+.pagination { display: flex; justify-content: flex-end; padding-top: 16px; }
 </style>

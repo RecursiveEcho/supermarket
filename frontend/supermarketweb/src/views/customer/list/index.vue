@@ -1,76 +1,103 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Plus, Edit, Delete } from '@element-plus/icons-vue'
+import { deleteCustomer, pageCustomer, queryCustomer, saveCustomer } from '@/api/customer'
 
 const tableData = ref([])
 const loading = ref(false)
+const total = ref(0)
+const pageNum = ref(1)
+const pageSize = ref(10)
+const queryMode = ref(false)
+const queryAllList = ref([])
 
 const searchForm = reactive({
-  customerName: '',
+  userName: '',
+  name: '',
   phone: '',
-  levelId: '',
-  status: ''
+  gender: ''
 })
-
-const levelOptions = ref([
-  { id: 1, name: '普通客户' },
-  { id: 2, name: 'VIP 客户' },
-  { id: 3, name: '重要客户' }
-])
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增客户')
 const formData = reactive({
   id: null,
-  customerName: '',
+  userName: '',
+  name: '',
+  age: null,
+  gender: '',
   phone: '',
-  email: '',
-  levelId: null,
-  source: '',
-  status: 1,
-  remark: ''
+  address: ''
 })
 
 const formRules = {
-  customerName: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
+  userName: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
   ]
 }
 
-const loadData = () => {
+const hasQuery = computed(() => !!(searchForm.userName || searchForm.name || searchForm.phone || searchForm.gender))
+
+const loadData = async () => {
   loading.value = true
-  setTimeout(() => {
-    tableData.value = [
-      {
-        id: 1,
-        customerName: '李先生',
-        phone: '13800138001',
-        email: 'li@example.com',
-        levelName: 'VIP 客户',
-        source: '门店',
-        status: 1,
-        createTime: '2024-01-10'
-      }
-    ]
+  try {
+    if (queryMode.value) {
+      const start = (pageNum.value - 1) * pageSize.value
+      const end = start + pageSize.value
+      tableData.value = queryAllList.value.slice(start, end)
+      total.value = queryAllList.value.length
+    } else {
+      const res = await pageCustomer({ pageNum: pageNum.value, pageSize: pageSize.value })
+      tableData.value = res?.list || []
+      total.value = Number(res?.total || 0)
+    }
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
-const handleSearch = () => loadData()
+const handleSearch = async () => {
+  if (!hasQuery.value) {
+    queryMode.value = false
+    pageNum.value = 1
+    loadData()
+    return
+  }
+  loading.value = true
+  try {
+    const list = await queryCustomer({
+      userName: searchForm.userName || undefined,
+      name: searchForm.name || undefined,
+      phone: searchForm.phone || undefined,
+      gender: searchForm.gender || undefined
+    })
+    queryAllList.value = Array.isArray(list) ? list : []
+    queryMode.value = true
+    pageNum.value = 1
+    loadData()
+  } finally {
+    loading.value = false
+  }
+}
+
 const handleReset = () => {
-  searchForm.customerName = ''
+  searchForm.userName = ''
+  searchForm.name = ''
   searchForm.phone = ''
-  searchForm.levelId = ''
-  searchForm.status = ''
+  searchForm.gender = ''
+  queryMode.value = false
+  queryAllList.value = []
+  pageNum.value = 1
   loadData()
 }
 
 const handleAdd = () => {
   dialogTitle.value = '新增客户'
-  Object.assign(formData, { id: null, customerName: '', phone: '', email: '', levelId: null, source: '', status: 1, remark: '' })
+  Object.assign(formData, { id: null, userName: '', name: '', age: null, gender: '', phone: '', address: '' })
   dialogVisible.value = true
 }
 
@@ -81,25 +108,34 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  ElMessageBox.confirm(`确定要删除客户"${row.customerName}"吗？`, '警告', {
+  ElMessageBox.confirm(`确定要删除客户"${row.name}"吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    tableData.value.splice(index, 1)
+    return deleteCustomer(row.id)
+  }).then(() => {
     ElMessage.success('删除成功')
+    loadData()
   }).catch(() => {})
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  await saveCustomer(formData)
   ElMessage.success(dialogTitle.value === '新增客户' ? '添加成功' : '更新成功')
   dialogVisible.value = false
   loadData()
 }
 
-const statusTagMap = {
-  1: { type: 'success', text: '活跃' },
-  0: { type: 'info', text: '休眠' }
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  pageNum.value = 1
+  loadData()
+}
+
+const handleCurrentChange = (val) => {
+  pageNum.value = val
+  loadData()
 }
 
 onMounted(() => {
@@ -111,21 +147,19 @@ onMounted(() => {
   <div class="container">
     <el-card class="search-card" shadow="never">
       <el-form :inline="true" :model="searchForm" class="search-form">
+        <el-form-item label="用户名">
+          <el-input v-model="searchForm.userName" placeholder="请输入用户名" clearable style="width: 120px" />
+        </el-form-item>
         <el-form-item label="客户姓名">
-          <el-input v-model="searchForm.customerName" placeholder="请输入姓名" clearable style="width: 120px" />
+          <el-input v-model="searchForm.name" placeholder="请输入姓名" clearable style="width: 120px" />
         </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="searchForm.phone" placeholder="请输入手机号" clearable style="width: 130px" />
         </el-form-item>
-        <el-form-item label="客户等级">
-          <el-select v-model="searchForm.levelId" placeholder="请选择等级" clearable style="width: 120px">
-            <el-option v-for="item in levelOptions" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="searchForm.status" placeholder="请选择状态" clearable style="width: 100px">
-            <el-option label="活跃" value="1" />
-            <el-option label="休眠" value="0" />
+        <el-form-item label="性别">
+          <el-select v-model="searchForm.gender" placeholder="请选择性别" clearable style="width: 120px">
+            <el-option label="男" value="男" />
+            <el-option label="女" value="女" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -139,16 +173,12 @@ onMounted(() => {
     <el-card class="table-card" shadow="never">
       <el-table v-loading="loading" :data="tableData" style="width: 100%" border stripe>
         <el-table-column type="index" label="序号" width="60" align="center" />
-        <el-table-column prop="customerName" label="客户姓名" width="100" />
+        <el-table-column prop="userName" label="用户名" width="120" />
+        <el-table-column prop="name" label="客户姓名" width="100" />
         <el-table-column prop="phone" label="手机号" width="130" />
-        <el-table-column prop="email" label="邮箱" width="150" show-overflow-tooltip />
-        <el-table-column prop="levelName" label="等级" width="100" />
-        <el-table-column prop="source" label="来源" width="100" />
-        <el-table-column label="状态" width="80" align="center">
-          <template #default="{ row }">
-            <el-tag :type="statusTagMap[row.status].type">{{ statusTagMap[row.status].text }}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="gender" label="性别" width="80" />
+        <el-table-column prop="age" label="年龄" width="80" />
+        <el-table-column prop="address" label="收货地址" show-overflow-tooltip />
         <el-table-column prop="createTime" label="创建时间" width="160" />
         <el-table-column label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
@@ -157,14 +187,26 @@ onMounted(() => {
           </template>
         </el-table-column>
       </el-table>
+
+      <div class="pagination">
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </el-card>
 
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="700px" @closed="resetForm">
       <el-form :model="formData" :rules="formRules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="客户姓名" prop="customerName">
-              <el-input v-model="formData.customerName" placeholder="请输入姓名" clearable />
+            <el-form-item label="用户名" prop="userName">
+              <el-input v-model="formData.userName" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -175,37 +217,28 @@ onMounted(() => {
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="formData.email" placeholder="请输入邮箱" clearable />
+            <el-form-item label="客户姓名" prop="name">
+              <el-input v-model="formData.name" placeholder="请输入姓名" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="客户等级" prop="levelId">
-              <el-select v-model="formData.levelId" placeholder="请选择等级" style="width: 100%">
-                <el-option v-for="item in levelOptions" :key="item.id" :label="item.name" :value="item.id" />
+            <el-form-item label="性别" prop="gender">
+              <el-select v-model="formData.gender" placeholder="请选择性别" style="width: 100%">
+                <el-option label="男" value="男" />
+                <el-option label="女" value="女" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="客户来源" prop="source">
-              <el-input v-model="formData.source" placeholder="例：门店/线上" clearable />
+            <el-form-item label="年龄" prop="age">
+              <el-input-number v-model="formData.age" :min="0" :max="120" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="status">
-              <el-radio-group v-model="formData.status">
-                <el-radio :label="1">活跃</el-radio>
-                <el-radio :label="0">休眠</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="备注" prop="remark">
-              <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注" maxlength="256" show-word-limit />
+            <el-form-item label="收货地址" prop="address">
+              <el-input v-model="formData.address" placeholder="请输入收货地址" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -224,4 +257,5 @@ onMounted(() => {
 .search-form { display: flex; flex-wrap: wrap; }
 .search-form :deep(.el-form-item) { margin-right: 16px; }
 .table-card { min-height: 500px; }
+.pagination { display: flex; justify-content: flex-end; padding-top: 16px; }
 </style>

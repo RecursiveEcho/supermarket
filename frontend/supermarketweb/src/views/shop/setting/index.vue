@@ -1,10 +1,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Save, Upload } from '@element-plus/icons-vue'
+import { Check, Upload } from '@element-plus/icons-vue'
 
 const loading = ref(false)
-const shopForm = reactive({
+const STORAGE_KEY = 'shop_setting'
+const defaultShopForm = {
   shopName: '邕城百货总店',
   shopCode: 'SHOP001',
   shopType: 'FLAGSHIP',
@@ -22,7 +23,20 @@ const shopForm = reactive({
   closeTime: '22:00',
   description: '大型综合超市',
   shopImages: []
-})
+}
+
+const loadSetting = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { ...defaultShopForm }
+    const obj = JSON.parse(raw)
+    return { ...defaultShopForm, ...(obj || {}) }
+  } catch {
+    return { ...defaultShopForm }
+  }
+}
+
+const shopForm = reactive(loadSetting())
 
 const shopTypeOptions = [
   { value: 'FLAGSHIP', label: '旗舰店' },
@@ -32,10 +46,12 @@ const shopTypeOptions = [
 
 const handleSave = () => {
   loading.value = true
-  setTimeout(() => {
-    ElMessage.success('店铺设置保存成功')
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(shopForm))
+    ElMessage.success('店铺设置保存成功（本地保存）')
+  } finally {
     loading.value = false
-  }, 500)
+  }
 }
 
 const handleUpload = () => {
@@ -49,7 +65,7 @@ const handleUpload = () => {
       <template #header>
         <div class="card-header">
           <span>店铺设置</span>
-          <el-button type="primary" :icon="Save" @click="handleSave" :loading="loading">保存设置</el-button>
+          <el-button type="primary" :icon="Check" @click="handleSave" :loading="loading">保存设置</el-button>
         </div>
       </template>
       <el-form :model="shopForm" label-width="120px" style="max-width: 800px">

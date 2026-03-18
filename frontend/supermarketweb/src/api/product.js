@@ -1,35 +1,51 @@
 import request from '@/utils/request'
 
-// 获取商品列表
-export function getProductList(params) {
+export function pageProduct(params) {
   return request({
-    url: '/product/list',
+    url: '/product/pageProduct',
     method: 'get',
     params
   })
 }
 
-// 获取商品详情
-export function getProductDetail(id) {
+export function getProduct(id) {
   return request({
-    url: `/product/detail/${id}`,
+    url: `/product/getProduct/${id}`,
     method: 'get'
   })
 }
 
-// 保存商品（新增/编辑）
-export function saveProduct(data) {
+export function addProduct(data) {
   return request({
-    url: '/product/save',
+    url: '/product/addProduct',
     method: 'post',
     data
   })
 }
 
-// 删除商品
+export function updateProduct(data) {
+  return request({
+    url: '/product/updateProduct',
+    method: 'put',
+    data
+  })
+}
+
 export function deleteProduct(id) {
   return request({
-    url: `/product/delete/${id}`,
+    url: `/product/deleteProduct/${id}`,
     method: 'delete'
   })
+}
+
+export function queryProduct(data) {
+  return request({
+    url: '/product/queryProduct',
+    method: 'post',
+    data
+  })
+}
+
+export function saveProduct(data) {
+  return data?.id ? updateProduct(data) : addProduct(data)
 }
